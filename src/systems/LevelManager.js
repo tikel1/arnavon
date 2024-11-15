@@ -35,8 +35,10 @@ export class LevelManager {
     }
 
     generateSeries() {
-        if (this.scene.isGameOver) return;
-
+        if (this.scene.isGameOver || this.isSpawningSeries) return;
+        
+        this.isSpawningSeries = true;  // Set flag immediately
+        
         const obstacleCount = Phaser.Math.Between(1, 3);
         console.log(`Spawning series ${this.currentSeries + 1}/${this.seriesInLevel} with ${obstacleCount} obstacles`);
         
@@ -96,6 +98,8 @@ export class LevelManager {
         }
 
         console.log(`Level ${this.currentLevel} starting with ${this.seriesInLevel} series (Speed: ${this.currentSpeed})`);
+        
+        // Reset spawning flag
         this.isSpawningSeries = false;
 
         // Add this new section to trigger the next series for MathMode
@@ -119,22 +123,17 @@ export class LevelManager {
     }
 
     completeSeries() {
-        // If we're in math mode, call the scene's clearQuestion method
-        if (this.scene.constructor.name === 'MathMode') {
-            this.scene.clearQuestion();
-        }
-        
         this.currentSeries++;
         console.log(`Completed series ${this.currentSeries}/${this.seriesInLevel}`);
         
         if (this.currentSeries >= this.seriesInLevel) {
             this.completeLevel();
         } else {
-            this.isSpawningSeries = false;  // Only reset if not completing level
-            console.log('Ready for next series');
-            // Tell MathMode to spawn new question
+            this.isSpawningSeries = false;  // Reset flag
             if (this.scene.constructor.name === 'MathMode') {
-                this.scene.spawnSeries();
+                this.scene.time.delayedCall(1000, () => {
+                    this.scene.spawnSeries();
+                });
             }
         }
     }

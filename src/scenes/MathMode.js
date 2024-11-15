@@ -159,7 +159,10 @@ export class MathMode extends BaseScene {
     }
 
     startCountdown() {
-        // Base time reduced by 20% each level
+        if (this.countdownTimer) {
+            this.countdownTimer.destroy();
+        }
+        
         const baseTime = 5;
         const level = this.levelManager.currentLevel;
         let timeLeft = Math.max(2, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
@@ -174,8 +177,7 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    this.levelManager.isSpawningSeries = true;
-                    this.levelManager.generateSeries();
+                    this.levelManager.generateSeries(); // Generate obstacles after countdown
                 }
             },
             repeat: timeLeft - 1
@@ -183,8 +185,10 @@ export class MathMode extends BaseScene {
     }
 
     spawnSeries() {
+        this.clearQuestion();  // Clear any existing question first
         this.generateQuestion();
         this.startCountdown();
+        this.levelManager.isSpawningSeries = false; // Reset flag to allow new series
     }
 
     clearQuestion() {
@@ -197,20 +201,6 @@ export class MathMode extends BaseScene {
         }
         if (this.countdownTimer) {
             this.countdownTimer.destroy();
-        }
-    }
-
-    // Override the base scene's completeSeries method
-    completeSeries() {
-        this.clearQuestion();
-        this.levelManager.completeSeries();
-        
-        // If we have more series to go, generate a new question immediately
-        if (this.levelManager.currentSeries < this.levelManager.seriesInLevel) {
-            this.generateQuestion();
-            this.time.delayedCall(1000, () => {
-                this.startCountdown();
-            });
         }
     }
 
