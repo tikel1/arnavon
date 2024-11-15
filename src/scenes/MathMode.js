@@ -173,6 +173,9 @@ export class MathMode extends BaseScene {
         
         this.countdownText.setText(timeLeft.toString());
         
+        // Block series generation during countdown
+        this.levelManager.isSpawningSeries = true;
+        
         this.countdownTimer = this.time.addEvent({
             delay: 1000,
             callback: () => {
@@ -181,9 +184,9 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    if (!this.levelManager.isSpawningSeries) {
-                        this.levelManager.generateSeries();
-                    }
+                    // Only now allow series generation
+                    this.levelManager.isSpawningSeries = false;
+                    this.levelManager.generateSeries();
                 }
             },
             repeat: timeLeft - 1
