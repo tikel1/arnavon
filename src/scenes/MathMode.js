@@ -167,31 +167,27 @@ export class MathMode extends BaseScene {
         
         this.countdownText.setText(timeLeft.toString());
         
-        return new Promise((resolve) => {
-            this.countdownTimer = this.time.addEvent({
-                delay: 1000,
-                callback: () => {
-                    timeLeft--;
-                    if (timeLeft > 0) {
-                        this.countdownText.setText(timeLeft.toString());
-                    } else {
-                        this.countdownText.setText('');
-                        resolve();
+        this.countdownTimer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    this.countdownText.setText(timeLeft.toString());
+                } else {
+                    this.countdownText.setText('');
+                    if (!this.levelManager.isSpawningSeries) {
+                        this.levelManager.generateSeries();
                     }
-                },
-                repeat: timeLeft - 1
-            });
-        }).then(() => {
-            if (!this.levelManager.isSpawningSeries) {
-                this.levelManager.generateSeries();
-            }
+                }
+            },
+            repeat: timeLeft - 1
         });
     }
 
-    async spawnSeries() {
+    spawnSeries() {
         this.clearQuestion();  // Clear any existing question first
         this.generateQuestion();
-        await this.startCountdown();  // Wait for countdown to complete
+        this.startCountdown();
     }
 
     clearQuestion() {
