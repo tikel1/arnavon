@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: #333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#game {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+canvas {
+  width: 40% !important;
+  height: 100% !important;
+} 
