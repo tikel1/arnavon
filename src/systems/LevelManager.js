@@ -36,12 +36,20 @@ export class LevelManager {
 
     generateSeries() {
         if (this.scene.isGameOver || this.isSpawningSeries) {
-            console.log('Blocked series generation - already spawning or game over');
+            console.log('[LevelManager.generateSeries] Blocked - already spawning or game over');
+            console.trace();
             return;
         }
         
-        this.isSpawningSeries = true;  // Set flag immediately
-        console.log('Starting series generation');
+        if (this.scene.constructor.name === 'MathMode' && !this.scene.currentQuestion) {
+            console.log('[LevelManager.generateSeries] Blocked - no active question');
+            console.trace();
+            return;
+        }
+        
+        this.isSpawningSeries = true;
+        console.log('[LevelManager.generateSeries] Starting series generation');
+        console.trace();
         
         const obstacleCount = Phaser.Math.Between(1, 3);
         console.log(`Spawning series ${this.currentSeries + 1}/${this.seriesInLevel} with ${obstacleCount} obstacles`);

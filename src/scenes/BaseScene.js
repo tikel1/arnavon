@@ -121,6 +121,10 @@ export class BaseScene extends Phaser.Scene {
     }
 
     update() {
+        if (this.levelManager && !this.levelManager.isSpawningSeries) {
+            console.log('[BaseScene.update] Triggering level manager update');
+            console.trace();
+        }
         if (this.isGameOver) return;
 
         const delta = this.game.loop.delta / 1000;  // Convert to seconds

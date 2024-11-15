@@ -107,6 +107,7 @@ export class MathMode extends BaseScene {
     }
 
     generateQuestion() {
+        console.log('Generating new question...');
         const level = this.levelManager.currentLevel;
         // Get difficulty settings for current level, if above 10 use level 10 settings
         const settings = DIFFICULTY_SETTINGS[Math.min(level, 10)];
@@ -154,6 +155,7 @@ export class MathMode extends BaseScene {
         }
 
         this.setupJumpKeys(this.currentQuestion.answer);
+        console.log('Question generated:', this.currentQuestion);
     }
 
     startCountdown() {
@@ -185,7 +187,9 @@ export class MathMode extends BaseScene {
     }
 
     spawnSeries() {
-        this.clearQuestion();  // Clear any existing question first
+        console.log('[MathMode.spawnSeries] Starting new series');
+        console.trace();
+        this.clearQuestion();
         this.generateQuestion();
         this.startCountdown();
     }
