@@ -97,6 +97,13 @@ export class LevelManager {
 
         console.log(`Level ${this.currentLevel} starting with ${this.seriesInLevel} series (Speed: ${this.currentSpeed})`);
         this.isSpawningSeries = false;
+
+        // Add this new section to trigger the next series for MathMode
+        if (this.scene.constructor.name === 'MathMode') {
+            this.scene.time.delayedCall(1000, () => {
+                this.scene.spawnSeries();
+            });
+        }
     }
 
     update() {

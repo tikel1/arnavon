@@ -1,6 +1,35 @@
 import { BaseScene } from './BaseScene';
 import { Player } from '../entities/Player';
 
+const DIFFICULTY_SETTINGS = {
+    1: { min: 0, max: 10, operators: ['+'] },
+    2: { min: 5, max: 15, operators: ['+'] },
+    3: { min: 5, max: 20, operators: ['+', '-'] },
+    4: { min: 10, max: 20, operators: ['+', '-'] },
+    5: { min: 15, max: 25, operators: ['+', '-'] },
+    6: { min: 15, max: 30, operators: ['+', '-'] },
+    7: { 
+        addition: { min: 20, max: 30, operators: ['+'] },
+        subtraction: { min: 20, max: 30, operators: ['-'] },
+        multiplication: { min: 0, max: 10, operators: ['*'] }
+    },
+    8: { 
+        addition: { min: 20, max: 30, operators: ['+'] },
+        subtraction: { min: 20, max: 30, operators: ['-'] },
+        multiplication: { min: 0, max: 10, operators: ['*'] }
+    },
+    9: { 
+        addition: { min: 20, max: 30, operators: ['+'] },
+        subtraction: { min: 20, max: 30, operators: ['-'] },
+        multiplication: { min: 0, max: 10, operators: ['*'] }
+    },
+    10: { 
+        addition: { min: 20, max: 30, operators: ['+'] },
+        subtraction: { min: 20, max: 30, operators: ['-'] },
+        multiplication: { min: 0, max: 10, operators: ['*'] }
+    }
+};
+
 export class MathMode extends BaseScene {
     constructor() {
         super('MathMode');
@@ -80,19 +109,38 @@ export class MathMode extends BaseScene {
     }
 
     generateQuestion() {
-        const operations = ['+', '-'];
-        const operation = operations[Math.floor(Math.random() * operations.length)];
-        let num1 = Math.floor(Math.random() * 9) + 1;
-        let num2 = Math.floor(Math.random() * 9) + 1;
-        let answer;
+        const level = this.levelManager.currentLevel;
+        // Get difficulty settings for current level, if above 10 use level 10 settings
+        const settings = DIFFICULTY_SETTINGS[Math.min(level, 10)];
+        
+        let operation, num1, num2, operationSettings;
 
+        if (level >= 7) {
+            // Randomly choose operation type
+            const operationType = Phaser.Math.RND.pick(['addition', 'subtraction', 'multiplication']);
+            operationSettings = settings[operationType];
+            operation = operationSettings.operators[0];
+        } else {
+            // For levels 1-6, use the old logic
+            operation = settings.operators[Math.floor(Math.random() * settings.operators.length)];
+            operationSettings = settings;
+        }
+
+        // Generate numbers within level range
+        num1 = Phaser.Math.Between(operationSettings.min, operationSettings.max);
+        num2 = Phaser.Math.Between(operationSettings.min, operationSettings.max);
+
+        let answer;
         if (operation === '+') {
             answer = num1 + num2;
-        } else {
+        } else if (operation === '-') {
+            // Ensure subtraction results in positive number
             if (num1 < num2) {
                 [num1, num2] = [num2, num1];
             }
             answer = num1 - num2;
+        } else if (operation === '*') {
+            answer = num1 * num2;
         }
 
         const answerStr = answer.toString();
@@ -107,12 +155,15 @@ export class MathMode extends BaseScene {
             this.questionText.setText(this.currentQuestion.display);
         }
 
-        // Setup jump keys for the new answer
         this.setupJumpKeys(this.currentQuestion.answer);
     }
 
     startCountdown() {
-        let timeLeft = 5;
+        // Base time reduced by 20% each level
+        const baseTime = 5;
+        const level = this.levelManager.currentLevel;
+        let timeLeft = Math.max(2, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
+        
         this.countdownText.setText(timeLeft.toString());
         
         this.countdownTimer = this.time.addEvent({
@@ -127,7 +178,7 @@ export class MathMode extends BaseScene {
                     this.levelManager.generateSeries();
                 }
             },
-            repeat: 4
+            repeat: timeLeft - 1
         });
     }
 
