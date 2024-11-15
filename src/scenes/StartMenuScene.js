@@ -89,10 +89,10 @@ export class StartMenuScene extends Phaser.Scene {
         });
 
         // Add instructions
-        this.add.text(
+        const instructions = this.add.text(
             this.cameras.main.centerX,
             this.cameras.main.height - 80,
-            'Use SPACE to jump\nAvoid obstacles and collect points!',
+            'Simple Mode: SPACE to jump\nMath Mode: ENTER to jump\nAvoid obstacles and collect points!',
             {
                 fontSize: '24px',
                 fill: '#fff',
@@ -104,6 +104,7 @@ export class StartMenuScene extends Phaser.Scene {
     }
 
     startGame(mode) {
-        this.scene.start('GameScene', { gameMode: mode });
+        const sceneName = mode === 'simple' ? 'SimpleMode' : 'MathMode';
+        this.scene.start(sceneName);
     }
 } 

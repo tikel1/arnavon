@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
         this.score = 0;
         this.lives = 3;
         this.gameMode = 'simple';  // default mode
+        this.basePath = import.meta.env.DEV ? '' : '/arnavon';
     }
 
     init(data) {
@@ -27,16 +28,16 @@ export class GameScene extends Phaser.Scene {
     preload() {
         // Load backgrounds with correct path
         for (let i = 1; i <= 4; i++) {
-            this.load.image(`background-${i}`, `assets/Background/nature_5/${i}.png`);
+            this.load.image(`background-${i}`, `${this.basePath}/assets/Background/nature_5/${i}.png`);
         }
 
         // Load player sprites
         this.load.spritesheet('player-run', 
-            'assets/1 Pink_Monster/Pink_Monster_Run_6.png',
+            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Run_6.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
         this.load.spritesheet('player-jump', 
-            'assets/1 Pink_Monster/Pink_Monster_Jump_8.png',
+            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Jump_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
 
@@ -68,10 +69,6 @@ export class GameScene extends Phaser.Scene {
         
         // Initialize background speeds
         this.levelManager.updateBackgroundSpeeds();
-
-        // Create player
-        this.player = new Player(this, 100, 260);
-        this.player.setDepth(1);
 
         // Create obstacles group
         this.obstacles = this.physics.add.group({

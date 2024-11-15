@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { StartMenuScene } from './scenes/StartMenuScene';
-import { GameScene } from './scenes/GameScene';
+import { SimpleMode } from './scenes/SimpleMode';
+import { MathMode } from './scenes/MathMode';
 import { GameOverScene } from './scenes/GameOverScene';
 
 const config = {
@@ -14,7 +15,7 @@ const config = {
             debug: false
         }
     },
-    scene: [StartMenuScene, GameScene, GameOverScene]
+    scene: [StartMenuScene, SimpleMode, MathMode, GameOverScene]
 };
 
 new Phaser.Game(config); 

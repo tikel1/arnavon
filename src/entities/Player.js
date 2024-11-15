@@ -1,10 +1,11 @@
 export class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
+    constructor(scene, x, y, jumpKey = Phaser.Input.Keyboard.KeyCodes.SPACE) {
         super(scene, x, y, 'player-run');
         this.scene = scene;
         this.groundY = 260;
         this.jumpForce = -450;
         this.baseAnimationSpeed = 12;
+        this.jumpKey = jumpKey;
         this.init();
     }
 
@@ -35,7 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.setScale(2);
         
         // Setup input
-        this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.jumpKeyObj = this.scene.input.keyboard.addKey(this.jumpKey);
         
         // Setup animations and start running
         this.setupAnimations();
@@ -106,16 +107,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     update() {
         if (this.isDead) {
-            // When dead, force position at ground level
             this.y = this.groundY;
             this.setVelocityY(0);
             return;
         }
 
-        // Keep player in fixed x position
         this.x = 100;
 
-        // Ground check and animation handling
         if (this.y >= this.groundY) {
             this.y = this.groundY;
             this.setVelocityY(0);
@@ -125,8 +123,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        // Handle jump input only if not dead
-        if (!this.isDead && this.spaceKey.isDown && !this.isJumping) {
+        // Check for jump input with multiple possible keys
+        if (Array.isArray(this.jumpKeyObj)) {
+            if (this.jumpKeyObj.some(key => key.isDown)) {
+                this.jump();
+            }
+        } else if (this.jumpKeyObj && this.jumpKeyObj.isDown) {
             this.jump();
         }
     }
