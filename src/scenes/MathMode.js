@@ -177,7 +177,7 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    this.levelManager.generateSeries();
+                    this.levelManager.generateSeries(); // Generate obstacles after countdown
                 }
             },
             repeat: timeLeft - 1
@@ -188,6 +188,7 @@ export class MathMode extends BaseScene {
         this.clearQuestion();  // Clear any existing question first
         this.generateQuestion();
         this.startCountdown();
+        this.levelManager.isSpawningSeries = false; // Reset flag to allow new series
     }
 
     clearQuestion() {

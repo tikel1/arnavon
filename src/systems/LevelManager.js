@@ -35,13 +35,9 @@ export class LevelManager {
     }
 
     generateSeries() {
-        if (this.scene.isGameOver || this.isSpawningSeries) {
-            console.log('Blocked series generation - already spawning or game over');
-            return;
-        }
+        if (this.scene.isGameOver || this.isSpawningSeries) return;
         
         this.isSpawningSeries = true;  // Set flag immediately
-        console.log('Starting series generation');
         
         const obstacleCount = Phaser.Math.Between(1, 3);
         console.log(`Spawning series ${this.currentSeries + 1}/${this.seriesInLevel} with ${obstacleCount} obstacles`);
@@ -127,11 +123,6 @@ export class LevelManager {
     }
 
     completeSeries() {
-        if (!this.isSpawningSeries) {
-            console.log('Blocked series completion - no active series');
-            return;
-        }
-        
         this.currentSeries++;
         console.log(`Completed series ${this.currentSeries}/${this.seriesInLevel}`);
         
