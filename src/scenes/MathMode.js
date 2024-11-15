@@ -78,6 +78,10 @@ export class MathMode extends BaseScene {
         this.clearQuestion();
         this.levelManager.isSpawningSeries = false;
         
+        // Now mark LevelManager as ready
+        this.levelManager.isReady = true;
+        console.log(`Starting Level ${this.levelManager.currentLevel} with ${this.levelManager.seriesInLevel} series`);
+        
         // Start the first series after a short delay
         this.time.delayedCall(500, () => {
             this.spawnSeries();

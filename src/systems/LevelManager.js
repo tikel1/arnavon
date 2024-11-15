@@ -7,6 +7,8 @@ export class LevelManager {
         this.currentSeries = 0;
         this.seriesInLevel = this.getRandomSeriesCount();
         this.isSpawningSeries = false;
+        this.isMathMode = scene.constructor.name === 'MathMode';
+        this.isReady = !this.isMathMode; // Only start ready if not in MathMode
         
         // Speed management
         this.BASE_MOVEMENT_SPEED = 250;
@@ -27,7 +29,9 @@ export class LevelManager {
         this.SERIES_SPACING = GAME.TIMING.SERIES_SPACING;
         
         this.updateBackgroundSpeeds();
-        console.log(`Starting Level ${this.currentLevel} with ${this.seriesInLevel} series`);
+        if (!this.isMathMode) {
+            console.log(`Starting Level ${this.currentLevel} with ${this.seriesInLevel} series`);
+        }
     }
 
     getRandomSeriesCount() {
