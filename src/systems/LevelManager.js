@@ -92,7 +92,7 @@ export class LevelManager {
     update() {
         if (!this.isSpawningSeries && !this.scene.isGameOver) {
             if (this.scene.constructor.name === 'MathMode') {
-                // Let MathMode handle its own spawning via its update method
+                // MathMode handles its own series spawning
                 return;
             } else {
                 this.generateSeries();

@@ -45,14 +45,15 @@ export class MathMode extends BaseScene {
             }
         ).setOrigin(0.5).setDepth(10);
 
-        // Debug key press listener - only for keydown
-        this.input.keyboard.on('keydown', (event) => {
-            console.log('Key pressed:', event.keyCode, String.fromCharCode(event.keyCode));
-        });
+        // Clear any existing state
+        this.clearQuestion();
+        this.levelManager.isSpawningSeries = false;
 
         // Start the first question after a short delay
         this.time.delayedCall(1000, () => {
-            this.spawnSeries();
+            if (!this.isGameOver) {
+                this.spawnSeries();
+            }
         });
     }
 
