@@ -34,7 +34,7 @@ export class LevelManager {
         return Phaser.Math.Between(5, 10);
     }
 
-    generateSeries() {
+    async generateSeries() {
         if (this.scene.isGameOver || this.isSpawningSeries) {
             console.log('Blocked series generation - already spawning or game over');
             return;
@@ -46,7 +46,12 @@ export class LevelManager {
         const obstacleCount = Phaser.Math.Between(1, 3);
         console.log(`Spawning series ${this.currentSeries + 1}/${this.seriesInLevel} with ${obstacleCount} obstacles`);
         
-        let delay = GAME.TIMING.COUNTDOWN_DURATION;
+        // For MathMode, wait for countdown
+        if (this.scene.constructor.name === 'MathMode') {
+            await this.scene.startCountdown();
+        }
+        
+        let delay = 0;  // Remove COUNTDOWN_DURATION since we handle it separately for MathMode
         
         // Spawn obstacles in series
         for (let i = 0; i < obstacleCount; i++) {

@@ -188,10 +188,10 @@ export class MathMode extends BaseScene {
         });
     }
 
-    spawnSeries() {
+    async spawnSeries() {
         this.clearQuestion();  // Clear any existing question first
         this.generateQuestion();
-        this.startCountdown();
+        await this.startCountdown();  // Wait for countdown to complete
     }
 
     clearQuestion() {

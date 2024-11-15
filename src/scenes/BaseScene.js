@@ -238,9 +238,8 @@ export class BaseScene extends Phaser.Scene {
     }
 
     spawnSeries() {
-        if (!this.isGameOver) {
-            this.levelManager.generateSeries();
-        }
+        // Let derived classes handle this
+        console.warn('spawnSeries called on BaseScene');
     }
 
     completeSeries() {
