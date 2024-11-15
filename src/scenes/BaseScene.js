@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { LevelManager } from '../systems/LevelManager';
+import { PowerupManager } from '../systems/PowerupManager';
 
 export class BaseScene extends Phaser.Scene {
     constructor(sceneName) {
@@ -27,6 +28,9 @@ export class BaseScene extends Phaser.Scene {
             `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Jump_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
+
+        // Load heart powerup
+        this.load.image('heart-powerup', `${this.basePath}/assets/Icons/Heart.png`);
 
         // Create obstacle texture
         const graphics = this.add.graphics();
@@ -100,6 +104,20 @@ export class BaseScene extends Phaser.Scene {
 
         // Reset physics state
         this.physics.world.resume();
+
+        // Create powerup manager
+        this.powerupManager = new PowerupManager(this);
+
+        // Add powerup collision after creating the player
+        if (this.player && this.powerupManager) {
+            this.physics.add.overlap(
+                this.player,
+                this.powerupManager.powerups,
+                this.powerupManager.handlePowerupCollision,
+                null,
+                this.powerupManager
+            );
+        }
     }
 
     update() {
@@ -128,6 +146,9 @@ export class BaseScene extends Phaser.Scene {
                 obstacle.destroy();
             }
         });
+
+        // Update powerup manager
+        this.powerupManager.update();
 
         // Update level manager
         this.levelManager.update();
@@ -199,6 +220,17 @@ export class BaseScene extends Phaser.Scene {
                 this.player,
                 this.obstacles,
                 this.handleCollision,
+                null,
+                this
+            );
+        }
+
+        // Add powerup collision
+        if (this.player && this.powerupManager) {
+            this.physics.add.overlap(
+                this.player,
+                this.powerupManager.powerups,
+                (player, powerup) => this.powerupManager.handlePowerupCollision(player, powerup),
                 null,
                 this
             );

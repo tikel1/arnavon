@@ -162,4 +162,8 @@ export class MathMode extends BaseScene {
             });
         }
     }
+
+    update() {
+        super.update(); // This will handle all updates including powerups
+    }
 } 

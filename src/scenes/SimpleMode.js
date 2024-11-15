@@ -39,6 +39,9 @@ export class SimpleMode extends BaseScene {
             }
         });
 
+        // Update powerup manager
+        this.powerupManager.update();
+
         // Update level manager
         this.levelManager.update();
     }

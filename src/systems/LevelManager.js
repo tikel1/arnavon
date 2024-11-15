@@ -12,6 +12,7 @@ export class LevelManager {
         this.BASE_MOVEMENT_SPEED = 250;
         this.speedMultipliers = {
             obstacle: 1,
+            powerup: 0.9,
             background: {
                 layer1: 0.3,
                 layer2: 0.45,
@@ -46,12 +47,21 @@ export class LevelManager {
             this.scene.time.delayedCall(delay, () => {
                 this.scene.spawnObstacle(this.getObstacleSpeed());
             });
-            delay += this.OBSTACLE_SPACING;
+            
+            // Add powerup after first obstacle in series with 2+ obstacles
+            if (i === 0 && obstacleCount > 1 && this.scene.lives < 3) {
+                this.scene.time.delayedCall(delay + GAME.TIMING.OBSTACLE_SPACING / 2, () => {
+                    console.log('Spawning powerup between obstacles');
+                    this.scene.powerupManager.spawnHeartPowerup();
+                });
+            }
+            
+            delay += GAME.TIMING.OBSTACLE_SPACING;
         }
         
         // Schedule series completion
-        const obstaclePassTime = (600 + 32) / Math.abs(this.currentSpeed) * 1000;
-        this.scene.time.delayedCall(delay + obstaclePassTime, () => {
+        const seriesTime = (obstacleCount * GAME.TIMING.OBSTACLE_SPACING) + GAME.TIMING.COUNTDOWN_DURATION;
+        this.scene.time.delayedCall(seriesTime, () => {
             this.completeSeries();
         });
     }
