@@ -78,9 +78,10 @@ export class MathMode extends BaseScene {
         this.clearQuestion();
         this.levelManager.isSpawningSeries = false;
         
-        // Generate first question
-        this.generateQuestion();
-        this.startCountdown();
+        // Start the first series after a short delay
+        this.time.delayedCall(500, () => {
+            this.spawnSeries();
+        });
     }
 
     setupJumpKeys(answer) {
@@ -166,20 +167,24 @@ export class MathMode extends BaseScene {
         
         this.countdownText.setText(timeLeft.toString());
         
-        this.countdownTimer = this.time.addEvent({
-            delay: 1000,
-            callback: () => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    this.countdownText.setText(timeLeft.toString());
-                } else {
-                    this.countdownText.setText('');
-                    if (!this.levelManager.isSpawningSeries) {
-                        this.levelManager.generateSeries();
+        return new Promise((resolve) => {
+            this.countdownTimer = this.time.addEvent({
+                delay: 1000,
+                callback: () => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        this.countdownText.setText(timeLeft.toString());
+                    } else {
+                        this.countdownText.setText('');
+                        resolve();
                     }
-                }
-            },
-            repeat: timeLeft - 1
+                },
+                repeat: timeLeft - 1
+            });
+        }).then(() => {
+            if (!this.levelManager.isSpawningSeries) {
+                this.levelManager.generateSeries();
+            }
         });
     }
 
