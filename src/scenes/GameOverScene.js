@@ -10,8 +10,14 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     create() {
-        // Pause the game scene's physics
-        this.scene.get('GameScene').physics.pause();
+        // Get the correct scene based on mode
+        const sceneName = this.gameMode === 'simple' ? 'SimpleMode' : 'MathMode';
+        const gameScene = this.scene.get(sceneName);
+        
+        // Pause the game scene's physics if it exists
+        if (gameScene && gameScene.physics) {
+            gameScene.physics.pause();
+        }
 
         // Add semi-transparent dark overlay
         const overlay = this.add.rectangle(
@@ -107,7 +113,9 @@ export class GameOverScene extends Phaser.Scene {
         menuButton.on('pointerdown', () => this.goToMenu());
 
         // Remove any existing keyboard listeners from the game scene
-        this.scene.get('GameScene').input.keyboard.enabled = false;
+        if (gameScene) {
+            gameScene.input.keyboard.enabled = false;
+        }
 
         // Add keyboard handlers with proper event handling
         const spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -138,29 +146,33 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     retryGame() {
+        const sceneName = this.gameMode === 'simple' ? 'SimpleMode' : 'MathMode';
+        const gameScene = this.scene.get(sceneName);
+        
         // Re-enable input for game scene before stopping
-        const gameScene = this.scene.get('GameScene');
         if (gameScene) {
             gameScene.input.keyboard.enabled = true;
-            gameScene.physics.resume();  // Make sure physics is resumed
+            gameScene.physics.resume();
         }
 
         // Stop both scenes and start a new game
         this.scene.stop('GameOverScene');
-        this.scene.stop('GameScene');
-        this.scene.start('GameScene', { gameMode: this.gameMode });
+        this.scene.stop(sceneName);
+        this.scene.start(sceneName);
     }
 
     goToMenu() {
+        const sceneName = this.gameMode === 'simple' ? 'SimpleMode' : 'MathMode';
+        const gameScene = this.scene.get(sceneName);
+        
         // Re-enable input for game scene before stopping
-        const gameScene = this.scene.get('GameScene');
         if (gameScene) {
             gameScene.input.keyboard.enabled = true;
         }
 
         // Stop both scenes and return to menu
         this.scene.stop('GameOverScene');
-        this.scene.stop('GameScene');
+        this.scene.stop(sceneName);
         this.scene.start('StartMenuScene');
     }
 } 

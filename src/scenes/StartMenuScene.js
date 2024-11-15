@@ -87,23 +87,10 @@ export class StartMenuScene extends Phaser.Scene {
         mathMode.on('pointerdown', () => {
             this.startGame('math');
         });
-
-        // Add instructions
-        this.add.text(
-            this.cameras.main.centerX,
-            this.cameras.main.height - 80,
-            'Use SPACE to jump\nAvoid obstacles and collect points!',
-            {
-                fontSize: '24px',
-                fill: '#fff',
-                stroke: '#000',
-                strokeThickness: 3,
-                align: 'center'
-            }
-        ).setOrigin(0.5);
     }
 
     startGame(mode) {
-        this.scene.start('GameScene', { gameMode: mode });
+        const sceneName = mode === 'simple' ? 'SimpleMode' : 'MathMode';
+        this.scene.start(sceneName);
     }
 } 
