@@ -77,13 +77,10 @@ export class MathMode extends BaseScene {
         // Clear any existing state
         this.clearQuestion();
         this.levelManager.isSpawningSeries = false;
-
-        // Start the first question after a short delay
-        this.time.delayedCall(1000, () => {
-            if (!this.isGameOver) {
-                this.spawnSeries();
-            }
-        });
+        
+        // Generate first question
+        this.generateQuestion();
+        this.startCountdown();
     }
 
     setupJumpKeys(answer) {
@@ -177,7 +174,9 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    this.levelManager.generateSeries();
+                    if (!this.levelManager.isSpawningSeries) {
+                        this.levelManager.generateSeries();
+                    }
                 }
             },
             repeat: timeLeft - 1
