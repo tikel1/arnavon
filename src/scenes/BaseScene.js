@@ -121,10 +121,6 @@ export class BaseScene extends Phaser.Scene {
     }
 
     update() {
-        if (this.levelManager && !this.levelManager.isSpawningSeries) {
-            console.log('[BaseScene.update] Triggering level manager update');
-            console.trace();
-        }
         if (this.isGameOver) return;
 
         const delta = this.game.loop.delta / 1000;  // Convert to seconds
@@ -134,28 +130,31 @@ export class BaseScene extends Phaser.Scene {
             bg.layer.tilePositionX += bg.speed;
         });
 
-        // Update player
-        this.player.update();
+        // Update player if exists
+        if (this.player) {
+            this.player.update();
+        }
 
         // Update obstacles
-        this.obstacles.children.each(obstacle => {
-            obstacle.x += obstacle.speed * delta;
-            
-            if (!obstacle.scored && obstacle.x + obstacle.width < this.player.x) {
-                obstacle.scored = true;
-                this.incrementScore();
-            }
+        if (this.obstacles) {
+            this.obstacles.children.each(obstacle => {
+                obstacle.x += obstacle.speed * delta;
+                
+                if (!obstacle.scored && obstacle.x + obstacle.width < this.player.x) {
+                    obstacle.scored = true;
+                    this.incrementScore();
+                }
 
-            if (obstacle.x < -obstacle.width) {
-                obstacle.destroy();
-            }
-        });
+                if (obstacle.x < -obstacle.width) {
+                    obstacle.destroy();
+                }
+            });
+        }
 
-        // Update powerup manager
-        this.powerupManager.update();
-
-        // Update level manager
-        this.levelManager.update();
+        // Only update level manager for non-MathMode scenes
+        if (this.levelManager && this.constructor.name !== 'MathMode') {
+            this.levelManager.update();
+        }
     }
 
     spawnObstacle(speed) {
