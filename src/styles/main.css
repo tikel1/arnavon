@@ -12,9 +12,10 @@ body {
   width: 100%;
   max-width: 800px;
   margin-top: 20px;
+  justify-content: center;
 }
 
 canvas {
-  width: 40% !important;
+  width: 100% !important;
   height: 100% !important;
 } 
