@@ -2,6 +2,8 @@ import { GAME } from '../config/constants';
 
 export class LevelManager {
     constructor(scene) {
+        console.log('[LevelManager] Environment:', import.meta.env.MODE);
+        console.log('[LevelManager] Scene type:', scene.constructor.name);
         this.scene = scene;
         this.currentLevel = 1;
         this.currentSeries = 0;

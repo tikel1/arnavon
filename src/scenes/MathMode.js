@@ -42,6 +42,8 @@ export class MathMode extends BaseScene {
 
     create() {
         super.create();
+        console.log('[MathMode.create] Starting creation');
+        
         this.player = new Player(this, 100, 260, Phaser.Input.Keyboard.KeyCodes.ENTER);
         this.player.setDepth(1);
         this.setupCollisions();
@@ -80,10 +82,11 @@ export class MathMode extends BaseScene {
         
         // Now mark LevelManager as ready
         this.levelManager.isReady = true;
-        console.log(`Starting Level ${this.levelManager.currentLevel} with ${this.levelManager.seriesInLevel} series`);
+        console.log(`[MathMode.create] Starting Level ${this.levelManager.currentLevel} with ${this.levelManager.seriesInLevel} series`);
         
-        // Start the first series after a short delay
-        this.time.delayedCall(500, () => {
+        // Add more delay for GH Pages
+        this.time.delayedCall(1000, () => {
+            console.log('[MathMode.create] Initial spawn delay complete');
             this.spawnSeries();
         });
     }
@@ -163,7 +166,9 @@ export class MathMode extends BaseScene {
     }
 
     startCountdown() {
+        console.log('[MathMode.startCountdown] Starting countdown');
         if (this.countdownTimer) {
+            console.log('[MathMode.startCountdown] Destroying existing timer');
             this.countdownTimer.destroy();
         }
         
@@ -179,14 +184,19 @@ export class MathMode extends BaseScene {
         this.countdownTimer = this.time.addEvent({
             delay: 1000,
             callback: () => {
+                console.log(`[MathMode.countdown] Time left: ${timeLeft}`);
                 timeLeft--;
                 if (timeLeft > 0) {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
+                    console.log('[MathMode.countdown] Countdown complete');
                     this.countdownText.setText('');
-                    // Move generateSeries call here to ensure countdown is complete
                     this.levelManager.isSpawningSeries = false;
-                    this.levelManager.generateSeries();
+                    // Add explicit check
+                    if (!this.levelManager.isSpawningSeries && !this.isGameOver) {
+                        console.log('[MathMode.countdown] Triggering series generation');
+                        this.levelManager.generateSeries();
+                    }
                 }
             },
             repeat: timeLeft - 1
@@ -194,6 +204,7 @@ export class MathMode extends BaseScene {
     }
 
     spawnSeries() {
+        console.log('[MathMode.spawnSeries] Environment:', import.meta.env.MODE);
         console.log('[MathMode.spawnSeries] Starting new series');
         console.trace();
         this.clearQuestion();
