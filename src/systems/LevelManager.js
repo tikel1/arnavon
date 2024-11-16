@@ -123,6 +123,8 @@ export class LevelManager {
     }
 
     completeSeries() {
+        if (this.scene.isGameOver) return;
+        
         this.currentSeries++;
         console.log(`Completed series ${this.currentSeries}/${this.seriesInLevel}`);
         
@@ -130,9 +132,13 @@ export class LevelManager {
             this.completeLevel();
         } else {
             this.isSpawningSeries = false;  // Reset flag
+            
+            // For MathMode, schedule next series with fixed delay
             if (this.scene.constructor.name === 'MathMode') {
-                this.scene.time.delayedCall(1000, () => {
-                    this.scene.spawnSeries();
+                this.scene.time.delayedCall(2000, () => {
+                    if (!this.scene.isGameOver) {
+                        this.scene.spawnSeries();
+                    }
                 });
             }
         }

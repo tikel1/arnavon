@@ -185,10 +185,19 @@ export class MathMode extends BaseScene {
     }
 
     spawnSeries() {
-        this.clearQuestion();  // Clear any existing question first
+        if (this.isGameOver || this.levelManager.isSpawningSeries) return;
+        
+        // Clear any existing question first
+        this.clearQuestion();
+        
+        // Set spawning flag immediately
+        this.levelManager.isSpawningSeries = true;
+        
+        // Generate new question
         this.generateQuestion();
+        
+        // Start countdown with proper timing
         this.startCountdown();
-        this.levelManager.isSpawningSeries = false; // Reset flag to allow new series
     }
 
     clearQuestion() {

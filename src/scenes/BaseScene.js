@@ -10,7 +10,7 @@ export class BaseScene extends Phaser.Scene {
         this.isGameOver = false;
         this.score = 0;
         this.lives = 3;
-        this.basePath = import.meta.env.DEV ? '' : '/arnavon';
+        this.basePath = window.location.pathname.includes('/arnavon') ? '/arnavon' : '';
     }
 
     preload() {

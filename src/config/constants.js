@@ -7,9 +7,9 @@ export const PLAYER = {
 
 export const GAME = {
     TIMING: {
-        OBSTACLE_SPACING: 2000,    // Time between obstacles in a series (ms)
-        SERIES_SPACING: 100,      // Time between series (ms)
-        COUNTDOWN_DURATION: 5000   // Initial countdown before series starts (ms)
+        OBSTACLE_SPACING: 2500,    // Increased from 2000 for more reliable spacing
+        SERIES_SPACING: 2000,      // Increased from 100 for more reliable series gaps
+        COUNTDOWN_DURATION: 3000   // Reduced from 5000 for better game flow
     }
 };
 
