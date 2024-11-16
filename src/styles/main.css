@@ -8,12 +8,14 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background-color: #f0f2f5;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background: #f0f2f5;
+  font-family: 'Press Start 2P', cursive;
+  gap: 1rem;
 }
 
 .banner {
@@ -35,11 +37,10 @@ body {
 }
 
 .game-title {
-  text-align: center;
   color: #2c3e50;
-  margin: 0.5rem 0;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 1.2rem;
+  font-size: 2rem;
+  margin-top: 0.5rem;
+  text-align: center;
 }
 
 .game-player {
@@ -55,21 +56,18 @@ body {
 }
 
 .game-subtitle {
-  text-align: center;
   color: #7f8c8d;
-  margin-top: 1rem;
-  font-size: 1.1rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  text-align: center;
 }
 
 #game {
   width: 576px;
   height: 324px;
+  display: block;
 }
 
 canvas {
-  width: 576px !important;
-  height: 324px !important;
-  display: block;
   border-radius: 8px;
 }
