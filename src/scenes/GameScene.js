@@ -40,6 +40,10 @@ export class GameScene extends Phaser.Scene {
             `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Jump_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
+        this.load.spritesheet('player-death', 
+            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Death_8.png`,
+            { frameWidth: 32, frameHeight: 32 }
+        );
 
         // Load heart powerup image
         this.load.image('heart-powerup', `${this.basePath}/assets/Icons/Heart.png`);
@@ -143,12 +147,13 @@ export class GameScene extends Phaser.Scene {
     handleCollision() {
         if (!this.player.isDead) {
             this.lives--;
-            this.livesText.setText('❤️'.repeat(this.lives));
+            if (this.lives >= 0) {
+                this.livesText.setText('❤️'.repeat(this.lives));
+            }
 
             if (this.lives <= 0) {
                 this.gameOver();
             } else {
-                // Handle hit but not game over
                 this.player.hit();
                 
                 // Remove nearby obstacles
@@ -170,21 +175,24 @@ export class GameScene extends Phaser.Scene {
                 obstacle.speed = 0;
             });
 
-            // Ensure player stays at ground position
-            this.player.isDead = true;
-            this.player.y = this.player.groundY;
-            this.player.setVelocityY(0);
-            this.player.body.allowGravity = false;
-            this.player.body.enable = false;
+            // Play death animation first
+            this.player.play('death');
+            
+            // Wait for animation to complete before disabling physics
+            this.time.delayedCall(800, () => {
+                this.player.isDead = true;
+                this.player.y = this.player.groundY;
+                this.player.setVelocityY(0);
+                this.player.body.allowGravity = false;
+                this.player.body.enable = false;
+                this.physics.pause();
 
-            // Pause physics
-            this.physics.pause();
-
-            // Launch game over scene as overlay
-            this.scene.launch('GameOverScene', {
-                score: this.score,
-                level: this.levelManager.currentLevel,
-                gameMode: this.gameMode
+                // Launch game over scene
+                this.scene.launch('GameOverScene', {
+                    score: this.score,
+                    level: this.levelManager.currentLevel,
+                    gameMode: this.gameMode
+                });
             });
         }
     }

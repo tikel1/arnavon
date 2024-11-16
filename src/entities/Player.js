@@ -70,6 +70,19 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             });
         }
 
+        // Death animation
+        if (!this.scene.anims.exists('death')) {
+            this.scene.anims.create({
+                key: 'death',
+                frames: this.scene.anims.generateFrameNumbers('player-death', {
+                    start: 0,
+                    end: 7
+                }),
+                frameRate: 10,
+                repeat: 0
+            });
+        }
+
         this.play('run', true);
     }
 
@@ -85,16 +98,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.isDead) {
             if (this.scene.lives <= 0) {
                 this.isDead = true;
-                this.play('jump');
-                this.setTint(0xff0000);
                 
-                // Ensure player stays at ground level
+                // First ensure player is at ground level
                 this.y = this.groundY;
                 this.setVelocityY(0);
                 
-                // Disable physics body
+                // Then disable physics
                 this.body.allowGravity = false;
                 this.body.enable = false;
+                
+                // Finally play death animation
+                this.play('death');
             } else {
                 // Just hit but not dead
                 this.setTint(0xff0000);
