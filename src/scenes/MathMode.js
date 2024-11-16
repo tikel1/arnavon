@@ -184,7 +184,7 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    // Only now allow series generation
+                    // Move generateSeries call here to ensure countdown is complete
                     this.levelManager.isSpawningSeries = false;
                     this.levelManager.generateSeries();
                 }

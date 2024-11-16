@@ -39,14 +39,10 @@ export class LevelManager {
     }
 
     generateSeries() {
-        if (this.scene.isGameOver || this.isSpawningSeries) {
-            console.log('[LevelManager.generateSeries] Blocked - already spawning or game over');
-            console.trace();
-            return;
-        }
-        
-        if (this.scene.constructor.name === 'MathMode' && !this.scene.currentQuestion) {
-            console.log('[LevelManager.generateSeries] Blocked - no active question');
+        if (this.scene.isGameOver || this.isSpawningSeries || 
+            (this.scene.constructor.name === 'MathMode' && 
+             (this.scene.countdownTimer?.getProgress() < 1 || !this.scene.currentQuestion))) {
+            console.log('[LevelManager.generateSeries] Blocked - already spawning, game over, or countdown active');
             console.trace();
             return;
         }
