@@ -177,7 +177,10 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    this.levelManager.generateSeries(); // Generate obstacles after countdown
+                    // Only generate series when countdown completes
+                    if (!this.isGameOver) {
+                        this.levelManager.generateSeries();
+                    }
                 }
             },
             repeat: timeLeft - 1
@@ -187,16 +190,14 @@ export class MathMode extends BaseScene {
     spawnSeries() {
         if (this.isGameOver || this.levelManager.isSpawningSeries) return;
         
-        // Clear any existing question first
-        this.clearQuestion();
-        
         // Set spawning flag immediately
         this.levelManager.isSpawningSeries = true;
         
-        // Generate new question
-        this.generateQuestion();
+        // Clear any existing question first
+        this.clearQuestion();
         
-        // Start countdown with proper timing
+        // Generate new question and start countdown
+        this.generateQuestion();
         this.startCountdown();
     }
 

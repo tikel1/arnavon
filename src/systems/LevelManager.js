@@ -113,11 +113,9 @@ export class LevelManager {
     update() {
         if (!this.isSpawningSeries && !this.scene.isGameOver) {
             if (this.scene.constructor.name === 'MathMode') {
-                // MathMode handles its own series spawning
-                return;
+                return; // Let MathMode handle its own series spawning
             } else {
                 this.generateSeries();
-                this.isSpawningSeries = true;
             }
         }
     }
@@ -131,7 +129,7 @@ export class LevelManager {
         if (this.currentSeries >= this.seriesInLevel) {
             this.completeLevel();
         } else {
-            this.isSpawningSeries = false;  // Reset flag
+            this.isSpawningSeries = false;
             
             // For MathMode, schedule next series with fixed delay
             if (this.scene.constructor.name === 'MathMode') {
