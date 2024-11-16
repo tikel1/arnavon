@@ -2,6 +2,7 @@ export class CharacterSelectScene extends Phaser.Scene {
     constructor() {
         super('CharacterSelectScene');
         this.selectedMode = null;
+        this.selectedCharacter = 0;
         this.basePath = import.meta.env.DEV ? '' : '/arnavon';
     }
 
@@ -42,13 +43,15 @@ export class CharacterSelectScene extends Phaser.Scene {
         const title = this.add.text(
             this.cameras.main.centerX,
             30,
-            'SELECT YOUR CHARACTER',
+            'בחר/י דמות',
             {
                 fontSize: '24px',
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 4,
-                fontFamily: 'Arial Black'
+                fontFamily: 'Handjet',
+                fontWeight: '700',
+                rtl: true
             }
         ).setOrigin(0.5);
 
@@ -59,7 +62,11 @@ export class CharacterSelectScene extends Phaser.Scene {
             { name: 'בלו', key: 'dude-preview', x: this.cameras.main.width * 0.75 }
         ];
 
-        characters.forEach(char => {
+        const characterFrames = [];
+        const characterPreviews = [];
+        const characterNames = [];
+
+        characters.forEach((char, index) => {
             // Create character frame
             const frame = this.add.rectangle(
                 char.x,
@@ -103,26 +110,63 @@ export class CharacterSelectScene extends Phaser.Scene {
                 stroke: '#000',
                 strokeThickness: 2,
                 fontFamily: 'Handjet',
-                rtl: true  // Right-to-left for Hebrew text
+                fontWeight: '700',
+                rtl: true
             }).setOrigin(0.5);
 
-            // Add hover effects
-            preview.on('pointerover', () => {
-                frame.setStrokeStyle(2, 0xffff00);
-                frameBorder.setStrokeStyle(2, 0xffff00);
-                nameText.setStyle({ fill: '#ffff00' });
-            });
+            characterFrames.push({ frame, frameBorder });
+            characterPreviews.push(preview);
+            characterNames.push(nameText);
+        });
 
-            preview.on('pointerout', () => {
-                frame.setStrokeStyle(2, 0xFFFFFF);
-                frameBorder.setStrokeStyle(2, 0xFFFFFF);
-                nameText.setStyle({ fill: '#fff' });
-            });
+        // Add keyboard controls
+        this.input.keyboard.on('keydown-LEFT', () => {
+            this.selectedCharacter = (this.selectedCharacter > 0) ? this.selectedCharacter - 1 : characters.length - 1;
+            this.updateCharacterStyles(characterFrames, characterNames);
+        });
 
-            // Add click handler
-            preview.on('pointerdown', () => {
-                this.startGame(char.name.split(' ')[0].toLowerCase());
-            });
+        this.input.keyboard.on('keydown-RIGHT', () => {
+            this.selectedCharacter = (this.selectedCharacter < characters.length - 1) ? this.selectedCharacter + 1 : 0;
+            this.updateCharacterStyles(characterFrames, characterNames);
+        });
+
+        this.input.keyboard.on('keydown-SPACE', () => {
+            this.startGame(characters[this.selectedCharacter].name);
+        });
+
+        this.input.keyboard.on('keydown-ENTER', () => {
+            this.startGame(characters[this.selectedCharacter].name);
+        });
+
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.scene.start('StartMenuScene');
+        });
+
+        // Initial character styles
+        this.updateCharacterStyles(characterFrames, characterNames);
+    }
+
+    updateCharacterStyles(frames, names) {
+        frames.forEach((frame, index) => {
+            if (index === this.selectedCharacter) {
+                frame.frame.setStrokeStyle(2, 0xffff00);
+                frame.frameBorder.setStrokeStyle(2, 0xffff00);
+                names[index].setStyle({ 
+                    fill: '#ffff00',
+                    fontFamily: 'Handjet',
+                    fontWeight: '700',
+                    rtl: true
+                });
+            } else {
+                frame.frame.setStrokeStyle(2, 0xFFFFFF);
+                frame.frameBorder.setStrokeStyle(2, 0xFFFFFF);
+                names[index].setStyle({ 
+                    fill: '#fff',
+                    fontFamily: 'Handjet',
+                    fontWeight: '700',
+                    rtl: true
+                });
+            }
         });
     }
 
