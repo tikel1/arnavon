@@ -49,8 +49,8 @@ export class CharacterSelectScene extends Phaser.Scene {
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 4,
-                fontFamily: 'Handjet',
-                fontWeight: '700',
+                fontFamily: 'Rubik',
+                fontWeight: '500',
                 rtl: true
             }
         ).setOrigin(0.5);
@@ -109,7 +109,7 @@ export class CharacterSelectScene extends Phaser.Scene {
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 2,
-                fontFamily: 'Handjet',
+                fontFamily: 'Rubik',
                 fontWeight: '700',
                 rtl: true
             }).setOrigin(0.5);
@@ -153,8 +153,8 @@ export class CharacterSelectScene extends Phaser.Scene {
                 frame.frameBorder.setStrokeStyle(2, 0xffff00);
                 names[index].setStyle({ 
                     fill: '#ffff00',
-                    fontFamily: 'Handjet',
-                    fontWeight: '700',
+                    fontFamily: 'Rubik',
+                    fontWeight: '500',
                     rtl: true
                 });
             } else {
@@ -162,8 +162,8 @@ export class CharacterSelectScene extends Phaser.Scene {
                 frame.frameBorder.setStrokeStyle(2, 0xFFFFFF);
                 names[index].setStyle({ 
                     fill: '#fff',
-                    fontFamily: 'Handjet',
-                    fontWeight: '700',
+                    fontFamily: 'Rubik',
+                    fontWeight: '500',
                     rtl: true
                 });
             }

@@ -35,8 +35,8 @@ export class StartMenuScene extends Phaser.Scene {
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 4,
-                fontFamily: 'Handjet',
-                fontWeight: '700',
+                fontFamily: 'Rubik',
+                fontWeight: '500',
                 rtl: true
             }
         ).setOrigin(0.5)
@@ -51,8 +51,8 @@ export class StartMenuScene extends Phaser.Scene {
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 4,
-                fontFamily: 'Handjet',
-                fontWeight: '700',
+                fontFamily: 'Rubik',
+                fontWeight: '500',
                 rtl: true
             }
         ).setOrigin(0.5)
