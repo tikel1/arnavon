@@ -38,6 +38,7 @@ export class MathMode extends BaseScene {
         this.jumpKeys = null;
         this.countdownText = null;
         this.countdownTimer = null;
+        this.isSpawningQuestion = false;
     }
 
     create() {
@@ -191,12 +192,13 @@ export class MathMode extends BaseScene {
                 } else {
                     console.log('[MathMode.countdown] Countdown complete');
                     this.countdownText.setText('');
-                    this.levelManager.isSpawningSeries = false;
-                    // Add explicit check
-                    if (!this.levelManager.isSpawningSeries && !this.isGameOver) {
-                        console.log('[MathMode.countdown] Triggering series generation');
-                        this.levelManager.generateSeries();
-                    }
+                    this.isSpawningQuestion = false;
+                    // Instead of calling generateSeries, spawn a single obstacle
+                    this.spawnObstacle(this.levelManager.getObstacleSpeed());
+                    // Schedule series completion
+                    this.time.delayedCall(1000, () => {
+                        this.completeSeries();
+                    });
                 }
             },
             repeat: timeLeft - 1
@@ -204,9 +206,15 @@ export class MathMode extends BaseScene {
     }
 
     spawnSeries() {
+        if (this.isSpawningQuestion) {
+            console.log('[MathMode.spawnSeries] Blocked - already spawning question');
+            return;
+        }
+        
         console.log('[MathMode.spawnSeries] Environment:', import.meta.env.MODE);
         console.log('[MathMode.spawnSeries] Starting new series');
-        console.trace();
+        this.isSpawningQuestion = true;
+        
         this.clearQuestion();
         this.generateQuestion();
         this.startCountdown();

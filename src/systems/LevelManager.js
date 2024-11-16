@@ -10,7 +10,11 @@ export class LevelManager {
         this.seriesInLevel = this.getRandomSeriesCount();
         this.isSpawningSeries = false;
         this.isMathMode = scene.constructor.name === 'MathMode';
-        this.isReady = !this.isMathMode; // Only start ready if not in MathMode
+        
+        // TEMP: Debug state
+        if (this.isMathMode) {
+            console.log('[LevelManager] Math Mode detected - disabling auto series generation');
+        }
         
         // Speed management
         this.BASE_MOVEMENT_SPEED = 250;
@@ -41,6 +45,12 @@ export class LevelManager {
     }
 
     generateSeries() {
+        // TEMP: Block all series generation from LevelManager in Math Mode
+        if (this.isMathMode) {
+            console.log('[LevelManager] Blocked series generation - Math Mode controls spawning');
+            return;
+        }
+
         if (this.scene.isGameOver || this.isSpawningSeries) {
             console.log('[LevelManager.generateSeries] Blocked - already spawning or game over');
             console.trace();
@@ -123,14 +133,14 @@ export class LevelManager {
     }
 
     update() {
+        // TEMP: Completely skip update for Math Mode
+        if (this.isMathMode) {
+            return;
+        }
+
         if (!this.isSpawningSeries && !this.scene.isGameOver) {
-            if (this.scene.constructor.name === 'MathMode') {
-                // MathMode handles its own series spawning
-                return;
-            } else {
-                this.generateSeries();
-                this.isSpawningSeries = true;
-            }
+            this.generateSeries();
+            this.isSpawningSeries = true;
         }
     }
 
