@@ -5,8 +5,8 @@ import { GameOverScene } from '../scenes/GameOverScene';
 
 export const gameConfig = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 576,
+    height: 324,
     physics: {
         default: 'arcade',
         arcade: {
@@ -16,10 +16,10 @@ export const gameConfig = {
     },
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_HORIZONTALLY,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
         parent: 'game',
-        width: 800,
-        height: 600
+        width: 576,
+        height: 324
     },
     scene: [StartMenuScene, SimpleMode, MathMode, GameOverScene]
 }; 
