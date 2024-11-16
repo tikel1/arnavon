@@ -149,16 +149,13 @@ export class BaseScene extends Phaser.Scene {
 
         // Update powerup manager
         this.powerupManager.update();
-
-        // Update level manager
-        this.levelManager.update();
     }
 
     spawnObstacle(speed) {
         if (!this.isGameOver) {
             const obstacle = this.physics.add.sprite(600, 260, 'obstacle');
             obstacle.scored = false;
-            obstacle.speed = this.levelManager.getObstacleSpeed();
+            obstacle.speed = speed;
             obstacle.body.allowGravity = false;
             obstacle.body.immovable = true;
             this.obstacles.add(obstacle);
@@ -238,15 +235,20 @@ export class BaseScene extends Phaser.Scene {
     }
 
     spawnSeries() {
-        if (!this.isGameOver) {
-            this.levelManager.generateSeries();
-        }
+        // This should be implemented by child classes
+        console.warn('spawnSeries() not implemented');
     }
 
     completeSeries() {
-        // Base implementation just tells the level manager to complete the series
-        if (!this.isGameOver) {
-            this.levelManager.completeSeries();
+        if (this.isGameOver) return;
+        
+        this.levelManager.currentSeries++;
+        if (this.levelManager.currentSeries >= this.levelManager.seriesInLevel) {
+            this.levelManager.completeLevel();
+            this.time.delayedCall(1000, () => this.spawnSeries());
+        } else {
+            this.levelManager.isSpawningSeries = false;
+            this.time.delayedCall(2000, () => this.spawnSeries());
         }
     }
 } 

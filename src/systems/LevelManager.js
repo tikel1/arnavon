@@ -22,62 +22,12 @@ export class LevelManager {
         };
         this.currentSpeed = this.BASE_MOVEMENT_SPEED;
         
-        // Use timing constants from config
-        this.OBSTACLE_SPACING = GAME.TIMING.OBSTACLE_SPACING;
-        this.SERIES_SPACING = GAME.TIMING.SERIES_SPACING;
-        
         this.updateBackgroundSpeeds();
         console.log(`Starting Level ${this.currentLevel} with ${this.seriesInLevel} series`);
     }
 
     getRandomSeriesCount() {
         return Phaser.Math.Between(5, 10);
-    }
-
-    generateSeries() {
-        if (this.scene.isGameOver || this.isSpawningSeries) return;
-        
-        this.isSpawningSeries = true;  // Set flag immediately
-        
-        const obstacleCount = Phaser.Math.Between(1, 3);
-        console.log(`Spawning series ${this.currentSeries + 1}/${this.seriesInLevel} with ${obstacleCount} obstacles`);
-        
-        let delay = GAME.TIMING.COUNTDOWN_DURATION;
-        
-        // Spawn obstacles in series
-        for (let i = 0; i < obstacleCount; i++) {
-            this.scene.time.delayedCall(delay, () => {
-                this.scene.spawnObstacle(this.getObstacleSpeed());
-            });
-            
-            // Add powerup after first obstacle in series with 2+ obstacles
-            if (i === 0 && obstacleCount > 1 && this.scene.lives < 3) {
-                this.scene.time.delayedCall(delay + GAME.TIMING.OBSTACLE_SPACING / 2, () => {
-                    console.log('Spawning powerup between obstacles');
-                    this.scene.powerupManager.spawnHeartPowerup();
-                });
-            }
-            
-            delay += GAME.TIMING.OBSTACLE_SPACING;
-        }
-        
-        // Schedule series completion
-        const seriesTime = (obstacleCount * GAME.TIMING.OBSTACLE_SPACING) + GAME.TIMING.COUNTDOWN_DURATION;
-        this.scene.time.delayedCall(seriesTime, () => {
-            this.completeSeries();
-        });
-    }
-
-    updateBackgroundSpeeds() {
-        // Convert pixels/second to pixels/frame
-        const baseSpeed = this.currentSpeed / 60;  
-
-        // Update each background layer
-        this.scene.backgrounds.forEach((bg, index) => {
-            const layerNumber = index + 1;
-            const multiplier = this.speedMultipliers.background[`layer${layerNumber}`];
-            bg.speed = baseSpeed * multiplier;
-        });
     }
 
     getObstacleSpeed() {
@@ -89,7 +39,6 @@ export class LevelManager {
         this.currentSeries = 0;
         this.seriesInLevel = this.getRandomSeriesCount();
         
-        // Increase speed for new level (20% faster each level)
         this.currentSpeed = this.BASE_MOVEMENT_SPEED * (1 + (this.currentLevel - 1) * 0.2);
         this.updateBackgroundSpeeds();
 
@@ -97,48 +46,16 @@ export class LevelManager {
             this.scene.levelText.setText('Level: ' + this.currentLevel);
         }
 
-        console.log(`Level ${this.currentLevel} starting with ${this.seriesInLevel} series (Speed: ${this.currentSpeed})`);
-        
-        // Reset spawning flag
+        console.log(`Level ${this.currentLevel} starting with ${this.seriesInLevel} series`);
         this.isSpawningSeries = false;
-
-        // Add this new section to trigger the next series for MathMode
-        if (this.scene.constructor.name === 'MathMode') {
-            this.scene.time.delayedCall(1000, () => {
-                this.scene.spawnSeries();
-            });
-        }
     }
 
-    update() {
-        if (!this.isSpawningSeries && !this.scene.isGameOver) {
-            if (this.scene.constructor.name === 'MathMode') {
-                return; // Let MathMode handle its own series spawning
-            } else {
-                this.generateSeries();
-            }
-        }
-    }
-
-    completeSeries() {
-        if (this.scene.isGameOver) return;
-        
-        this.currentSeries++;
-        console.log(`Completed series ${this.currentSeries}/${this.seriesInLevel}`);
-        
-        if (this.currentSeries >= this.seriesInLevel) {
-            this.completeLevel();
-        } else {
-            this.isSpawningSeries = false;
-            
-            // For MathMode, schedule next series with fixed delay
-            if (this.scene.constructor.name === 'MathMode') {
-                this.scene.time.delayedCall(2000, () => {
-                    if (!this.scene.isGameOver) {
-                        this.scene.spawnSeries();
-                    }
-                });
-            }
-        }
+    updateBackgroundSpeeds() {
+        const baseSpeed = this.currentSpeed / 60;  
+        this.scene.backgrounds.forEach((bg, index) => {
+            const layerNumber = index + 1;
+            const multiplier = this.speedMultipliers.background[`layer${layerNumber}`];
+            bg.speed = baseSpeed * multiplier;
+        });
     }
 } 

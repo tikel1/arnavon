@@ -1,5 +1,6 @@
 import { BaseScene } from './BaseScene';
 import { Player } from '../entities/Player';
+import { GAME } from '../config/constants';
 
 const DIFFICULTY_SETTINGS = {
     1: { min: 0, max: 10, operators: ['+'] },
@@ -177,9 +178,8 @@ export class MathMode extends BaseScene {
                     this.countdownText.setText(timeLeft.toString());
                 } else {
                     this.countdownText.setText('');
-                    // Only generate series when countdown completes
                     if (!this.isGameOver) {
-                        this.levelManager.generateSeries();
+                        this.spawnObstacles();
                     }
                 }
             },
@@ -187,18 +187,50 @@ export class MathMode extends BaseScene {
         });
     }
 
+    spawnObstacles() {
+        const obstacleCount = Phaser.Math.Between(1, 3);
+        let delay = 0;
+        
+        for (let i = 0; i < obstacleCount; i++) {
+            this.time.delayedCall(delay, () => {
+                this.spawnObstacle(this.levelManager.getObstacleSpeed());
+            });
+            delay += GAME.TIMING.OBSTACLE_SPACING;
+        }
+
+        // Schedule series completion
+        this.time.delayedCall(delay, () => {
+            this.completeSeries();
+        });
+    }
+
     spawnSeries() {
         if (this.isGameOver || this.levelManager.isSpawningSeries) return;
         
-        // Set spawning flag immediately
         this.levelManager.isSpawningSeries = true;
-        
-        // Clear any existing question first
         this.clearQuestion();
-        
-        // Generate new question and start countdown
         this.generateQuestion();
         this.startCountdown();
+    }
+
+    completeSeries() {
+        if (this.isGameOver) return;
+        
+        this.levelManager.currentSeries++;
+        
+        if (this.levelManager.currentSeries >= this.levelManager.seriesInLevel) {
+            this.levelManager.completeLevel();
+            // Start new level with new series after delay
+            this.time.delayedCall(1000, () => {
+                this.spawnSeries();
+            });
+        } else {
+            this.levelManager.isSpawningSeries = false;
+            // Schedule next series
+            this.time.delayedCall(2000, () => {
+                this.spawnSeries();
+            });
+        }
     }
 
     clearQuestion() {
