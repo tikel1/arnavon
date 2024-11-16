@@ -37,8 +37,8 @@ export class MathMode extends BaseScene {
         this.currentQuestion = null;
         this.questionText = null;
         this.jumpKeys = null;
-        this.countdownText = null;
-        this.countdownTimer = null;
+        this.timerBar = null;
+        this.timerEvent = null;
     }
 
     create() {
@@ -160,30 +160,66 @@ export class MathMode extends BaseScene {
     }
 
     startCountdown() {
-        if (this.countdownTimer) {
-            this.countdownTimer.destroy();
+        if (this.timerEvent) {
+            this.timerEvent.destroy();
         }
         
-        const baseTime = 5;
+        // Remove old timer bar if it exists
+        if (this.timerBar) {
+            this.timerBar.destroy();
+        }
+        
+        const baseTime = 5000; // Time in milliseconds
         const level = this.levelManager.currentLevel;
-        let timeLeft = Math.max(2, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
+        const timeLeft = Math.max(2000, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
         
-        this.countdownText.setText(timeLeft.toString());
+        // Create background bar (gray)
+        const barBackground = this.add.rectangle(
+            this.cameras.main.centerX,
+            80,
+            200,
+            20,
+            0x666666
+        ).setOrigin(0.5);
         
-        this.countdownTimer = this.time.addEvent({
-            delay: 1000,
+        // Create timer bar (green)
+        this.timerBar = this.add.rectangle(
+            this.cameras.main.centerX - 100,
+            80,
+            200,
+            20,
+            0x00ff00
+        ).setOrigin(0, 0.5);
+        
+        // Create the timer event
+        this.timerEvent = this.time.addEvent({
+            delay: timeLeft,
             callback: () => {
-                timeLeft--;
-                if (timeLeft > 0) {
-                    this.countdownText.setText(timeLeft.toString());
-                } else {
-                    this.countdownText.setText('');
-                    if (!this.isGameOver) {
-                        this.spawnObstacles();
+                if (!this.isGameOver) {
+                    this.spawnObstacles();
+                }
+                this.timerBar.destroy();
+                barBackground.destroy();
+            }
+        });
+        
+        // Update the timer bar width
+        this.time.addEvent({
+            delay: 16, // 60fps
+            callback: () => {
+                if (this.timerBar && this.timerBar.active) {
+                    const progress = this.timerEvent.getProgress();
+                    this.timerBar.width = 200 * (1 - progress);
+                    
+                    // Change color based on remaining time
+                    if (progress > 0.7) {
+                        this.timerBar.setFillStyle(0xff0000); // Red
+                    } else if (progress > 0.3) {
+                        this.timerBar.setFillStyle(0xffff00); // Yellow
                     }
                 }
             },
-            repeat: timeLeft - 1
+            loop: true
         });
     }
 
@@ -238,11 +274,11 @@ export class MathMode extends BaseScene {
         if (this.questionText) {
             this.questionText.setText('');
         }
-        if (this.countdownText) {
-            this.countdownText.setText('');
+        if (this.timerBar) {
+            this.timerBar.destroy();
         }
-        if (this.countdownTimer) {
-            this.countdownTimer.destroy();
+        if (this.timerEvent) {
+            this.timerEvent.destroy();
         }
     }
 

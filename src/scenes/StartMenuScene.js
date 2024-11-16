@@ -91,6 +91,6 @@ export class StartMenuScene extends Phaser.Scene {
 
     startGame(mode) {
         const sceneName = mode === 'simple' ? 'SimpleMode' : 'MathMode';
-        this.scene.start(sceneName);
+        this.scene.start('CharacterSelectScene', { mode: sceneName });
     }
 } 

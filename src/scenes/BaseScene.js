@@ -19,17 +19,21 @@ export class BaseScene extends Phaser.Scene {
             this.load.image(`background-${i}`, `${this.basePath}/assets/Background/nature_5/${i}.png`);
         }
 
+        const characterPath = this.selectedCharacter || 'Pink_Monster';
+        const folderNumber = characterPath === 'Pink_Monster' ? '1' : 
+                            characterPath === 'Owlet_Monster' ? '2' : '3';
+
         // Load player sprites
         this.load.spritesheet('player-run', 
-            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Run_6.png`,
+            `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Run_6.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
         this.load.spritesheet('player-jump', 
-            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Jump_8.png`,
+            `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Jump_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
         this.load.spritesheet('player-death', 
-            `${this.basePath}/assets/1 Pink_Monster/Pink_Monster_Death_8.png`,
+            `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Death_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
 
@@ -266,6 +270,17 @@ export class BaseScene extends Phaser.Scene {
         } else {
             this.levelManager.isSpawningSeries = false;
             this.time.delayedCall(2000, () => this.spawnSeries());
+        }
+    }
+
+    init(data) {
+        this.selectedCharacter = data.character ? `${data.character.charAt(0).toUpperCase()}${data.character.slice(1)}_Monster` : 'Pink_Monster';
+        this.isGameOver = false;
+        this.score = 0;
+        this.lives = 3;
+        
+        if (this.physics) {
+            this.physics.resume();
         }
     }
 } 

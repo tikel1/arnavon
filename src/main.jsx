@@ -3,6 +3,7 @@ import { StartMenuScene } from './scenes/StartMenuScene';
 import { SimpleMode } from './scenes/SimpleMode';
 import { MathMode } from './scenes/MathMode';
 import { GameOverScene } from './scenes/GameOverScene';
+import { CharacterSelectScene } from './scenes/CharacterSelectScene';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,7 +16,7 @@ const config = {
             debug: false
         }
     },
-    scene: [StartMenuScene, SimpleMode, MathMode, GameOverScene]
+    scene: [StartMenuScene, CharacterSelectScene, SimpleMode, MathMode, GameOverScene]
 };
 
 new Phaser.Game(config); 
