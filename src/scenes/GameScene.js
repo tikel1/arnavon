@@ -48,12 +48,14 @@ export class GameScene extends Phaser.Scene {
         // Load heart powerup image
         this.load.image('heart-powerup', `${this.basePath}/assets/Icons/Heart.png`);
 
-        // Create obstacle texture
-        const graphics = this.add.graphics();
-        graphics.fillStyle(0xFF0000);
-        graphics.fillRect(0, 0, 32, 32);
-        graphics.generateTexture('obstacle', 32, 32);
-        graphics.destroy();
+        // Load obstacle spritesheet
+        this.load.spritesheet('obstacle', 
+            `${this.basePath}/assets/Obstacles/rocks_shadow.png`,
+            { 
+                frameWidth: 24, 
+                frameHeight: 24 
+            }
+        );
     }
 
     create() {

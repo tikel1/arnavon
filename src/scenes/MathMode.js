@@ -93,18 +93,16 @@ export class MathMode extends BaseScene {
             this.jumpKeys.forEach(key => key.destroy());
         }
 
-        // Convert answer to number and create key listeners for both number row and numpad
-        const numericAnswer = parseInt(answer);
+        // Convert answer to string for comparison
+        const answerStr = answer.toString();
         
-        // Create array of valid key codes for this number
-        const numberKeyCode = 48 + numericAnswer; // 48 is '0' in ASCII
-        const numpadKeyCode = 96 + numericAnswer; // 96 is 'NUMPAD_0' in ASCII
+        // Create number keys for both regular numbers and numpad
+        const numberKey = this.input.keyboard.addKey(48 + parseInt(answerStr)); // Regular number keys
+        const numpadKey = this.input.keyboard.addKey(96 + parseInt(answerStr)); // Numpad keys
         
-        this.jumpKeys = [
-            this.input.keyboard.addKey(numberKeyCode),
-            this.input.keyboard.addKey(numpadKeyCode)
-        ];
-
+        // Store keys for cleanup
+        this.jumpKeys = [numberKey, numpadKey];
+        
         // Update player's jump key checking
         this.player.jumpKeyObj = this.jumpKeys;
     }

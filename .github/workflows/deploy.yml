@@ -27,12 +27,14 @@ jobs:
           mkdir -p public/assets/3\ Dude_Monster
           mkdir -p public/assets/Menu
           mkdir -p public/assets/Icons
+          mkdir -p public/assets/Obstacles
           cp -r assets/Background/nature_5/* public/assets/Background/nature_5/
           cp -r assets/1\ Pink_Monster/* public/assets/1\ Pink_Monster/
           cp -r assets/2\ Owlet_Monster/* public/assets/2\ Owlet_Monster/
           cp -r assets/3\ Dude_Monster/* public/assets/3\ Dude_Monster/
           cp -r assets/Menu/* public/assets/Menu/
           cp -r assets/Icons/* public/assets/Icons/
+          cp -r assets/Obstacles/* public/assets/Obstacles/
       
       - name: Build
         run: |

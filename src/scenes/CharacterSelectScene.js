@@ -21,6 +21,9 @@ export class CharacterSelectScene extends Phaser.Scene {
         this.load.image('dude-preview', 
             `${this.basePath}/assets/3 Dude_Monster/Dude_Monster_portrait.png`
         );
+        this.load.image('name-banner', 
+            `${this.basePath}/assets/Menu/UI_Flat_Banner01a.png`
+        );
     }
 
     create() {
@@ -67,7 +70,7 @@ export class CharacterSelectScene extends Phaser.Scene {
         const characterNames = [];
 
         characters.forEach((char, index) => {
-            // Create character frame
+            // Create character frame (dark background only)
             const frame = this.add.rectangle(
                 char.x,
                 160,
@@ -77,46 +80,48 @@ export class CharacterSelectScene extends Phaser.Scene {
                 0.8
             ).setOrigin(0.5);
 
-            // Add frame border
-            const frameBorder = this.add.rectangle(
-                char.x,
-                160,
-                120,
-                140,
-                0xFFFFFF,
-                1
-            ).setOrigin(0.5);
-            frameBorder.setStrokeStyle(2, 0xFFFFFF);
-
-            // Character portrait with frame
+            // Character portrait with larger initial scale
             const preview = this.add.image(char.x, 160, char.key)
-                .setScale(1.5)
+                .setScale(0.16)
                 .setInteractive();
 
             // Character name background
-            const nameBackground = this.add.rectangle(
+            const nameBackground = this.add.image(
                 char.x,
-                220,
-                110,
-                30,  // Slightly taller to accommodate Hebrew text
-                0x000000,
-                0.6
-            ).setOrigin(0.5);
+                222,
+                'name-banner'
+            )
+            .setOrigin(0.5)
+            .setScale(2, 1.5);
 
             // Character name
-            const nameText = this.add.text(char.x, 220, char.name, {
+            const nameText = this.add.text(char.x, 225, char.name, {
                 fontSize: '20px',
-                fill: '#fff',
+                fill: '#000000',
                 stroke: '#000',
-                strokeThickness: 2,
+                strokeThickness: 0,
                 fontFamily: 'Rubik',
                 fontWeight: '700',
                 rtl: true
-            }).setOrigin(0.5);
+            })
+            .setOrigin(0.5)
+            .setShadow(0, 2, '#ffc579', 0, true, true);
 
-            characterFrames.push({ frame, frameBorder });
+            characterFrames.push({ frame });  // Now only storing the dark background frame
             characterPreviews.push(preview);
             characterNames.push(nameText);
+        });
+
+        // Add floating animation to all characters
+        characterPreviews.forEach(preview => {
+            this.tweens.add({
+                targets: preview,
+                y: '+=4',  // Float up and down 4 pixels
+                duration: 1500,
+                yoyo: true,
+                repeat: -1,  // Infinite repeat
+                ease: 'Sine.easeInOut'
+            });
         });
 
         // Add keyboard controls
@@ -142,32 +147,51 @@ export class CharacterSelectScene extends Phaser.Scene {
             this.scene.start('StartMenuScene');
         });
 
+        // Update the updateCharacterStyles function
+        this.updateCharacterStyles = (frames, names) => {
+            frames.forEach((frame, index) => {
+                const preview = characterPreviews[index];
+                
+                if (index === this.selectedCharacter) {
+                    frame.frame.setStrokeStyle(2, 0x267ae9);
+                    names[index].setStyle({ 
+                        fill: '#267ae9',
+                        fontFamily: 'Rubik',
+                        fontWeight: '500',
+                        rtl: true
+                    });
+                    
+                    // Zoom in animation for selected character
+                    this.tweens.add({
+                        targets: preview,
+                        scaleX: 0.18,
+                        scaleY: 0.18,
+                        duration: 200,
+                        ease: 'Sine.easeOut'
+                    });
+                } else {
+                    frame.frame.setStrokeStyle(2, 0x000000);
+                    names[index].setStyle({ 
+                        fill: '#000000',
+                        fontFamily: 'Rubik',
+                        fontWeight: '500',
+                        rtl: true
+                    });
+                    
+                    // Reset scale for unselected characters
+                    this.tweens.add({
+                        targets: preview,
+                        scaleX: 0.16,
+                        scaleY: 0.16,
+                        duration: 200,
+                        ease: 'Sine.easeOut'
+                    });
+                }
+            });
+        };
+
         // Initial character styles
         this.updateCharacterStyles(characterFrames, characterNames);
-    }
-
-    updateCharacterStyles(frames, names) {
-        frames.forEach((frame, index) => {
-            if (index === this.selectedCharacter) {
-                frame.frame.setStrokeStyle(2, 0xffff00);
-                frame.frameBorder.setStrokeStyle(2, 0xffff00);
-                names[index].setStyle({ 
-                    fill: '#ffff00',
-                    fontFamily: 'Rubik',
-                    fontWeight: '500',
-                    rtl: true
-                });
-            } else {
-                frame.frame.setStrokeStyle(2, 0xFFFFFF);
-                frame.frameBorder.setStrokeStyle(2, 0xFFFFFF);
-                names[index].setStyle({ 
-                    fill: '#fff',
-                    fontFamily: 'Rubik',
-                    fontWeight: '500',
-                    rtl: true
-                });
-            }
-        });
     }
 
     startGame(character) {

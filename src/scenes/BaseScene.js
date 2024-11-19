@@ -40,12 +40,14 @@ export class BaseScene extends Phaser.Scene {
         // Load heart powerup
         this.load.image('heart-powerup', `${this.basePath}/assets/Icons/Heart.png`);
 
-        // Create obstacle texture
-        const graphics = this.add.graphics();
-        graphics.fillStyle(0xFF0000);
-        graphics.fillRect(0, 0, 32, 32);
-        graphics.generateTexture('obstacle', 32, 32);
-        graphics.destroy();
+        // Load obstacle spritesheet
+        this.load.spritesheet('obstacle', 
+            `${this.basePath}/assets/Obstacles/rocks_shadow.png`,
+            { 
+                frameWidth: 24, 
+                frameHeight: 24 
+            }
+        );
     }
 
     create() {
@@ -161,13 +163,15 @@ export class BaseScene extends Phaser.Scene {
 
     spawnObstacle(speed) {
         if (!this.isGameOver) {
-            const obstacle = this.physics.add.sprite(600, 260, 'obstacle');
+            const obstacle = this.physics.add.sprite(600, 270, 'obstacle');
+            const randomFrame = Phaser.Math.Between(0, 5);
+            obstacle.setFrame(randomFrame);
             obstacle.scored = false;
             obstacle.speed = speed;
             obstacle.body.allowGravity = false;
             obstacle.body.immovable = true;
             this.obstacles.add(obstacle);
-            obstacle.setScale(2);
+            obstacle.setScale(2.5);
         }
     }
 

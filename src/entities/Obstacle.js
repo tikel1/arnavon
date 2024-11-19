@@ -10,8 +10,12 @@ export class Obstacle extends Phaser.Physics.Arcade.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this, true);
         
-        // Set scale
-        this.setScale(2);
+        // Randomly select one of the 6 rock frames (0-5)
+        const randomFrame = Phaser.Math.Between(0, 5);
+        this.setFrame(randomFrame);
+        
+        // Set scale smaller
+        this.setScale(2.5);
     }
 
     update() {

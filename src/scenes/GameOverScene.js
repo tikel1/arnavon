@@ -31,14 +31,16 @@ export class GameOverScene extends Phaser.Scene {
         // Game Over text with animation
         const gameOver = this.add.text(
             this.cameras.main.centerX,
-            80,
-            'GAME OVER',
+            100,
+            'לא נורא',
             {
                 fontSize: '64px',
                 fill: '#ff0000',
                 stroke: '#000',
                 strokeThickness: 6,
-                fontFamily: 'Arial Black'
+                fontFamily: 'Rubik',
+                fontWeight: '500',
+                rtl: true
             }
         ).setOrigin(0.5);
 
@@ -53,11 +55,10 @@ export class GameOverScene extends Phaser.Scene {
         // Score and level info
         const stats = this.add.text(
             this.cameras.main.centerX,
-            180,
+            200,
             [
-                `Level: ${this.level}`,
-                `Final Score: ${this.finalScore}`,
-                `Mode: ${this.gameMode.charAt(0).toUpperCase() + this.gameMode.slice(1)}`
+                `שלב: ${this.level}`,
+                `תוצאה: ${this.finalScore}`
             ],
             {
                 fontSize: '32px',
@@ -65,7 +66,10 @@ export class GameOverScene extends Phaser.Scene {
                 stroke: '#000',
                 strokeThickness: 4,
                 align: 'center',
-                lineSpacing: 10
+                lineSpacing: 20,
+                fontFamily: 'Rubik',
+                fontWeight: '500',
+                rtl: true
             }
         ).setOrigin(0.5);
 
@@ -74,14 +78,17 @@ export class GameOverScene extends Phaser.Scene {
             fontSize: '28px',
             fill: '#fff',
             stroke: '#000',
-            strokeThickness: 4
+            strokeThickness: 4,
+            fontFamily: 'Rubik',
+            fontWeight: '500',
+            rtl: true
         };
 
         // Retry button
         const retryButton = this.add.text(
             this.cameras.main.centerX,
-            this.cameras.main.centerY + 50,
-            'Try Again (SPACE)',
+            300,
+            '!נסו שוב (רווח)',
             buttonStyle
         ).setOrigin(0.5)
         .setInteractive();
@@ -89,8 +96,8 @@ export class GameOverScene extends Phaser.Scene {
         // Menu button
         const menuButton = this.add.text(
             this.cameras.main.centerX,
-            this.cameras.main.centerY + 100,
-            'Main Menu (M)',
+            360,
+            'תפריט ראשי (M)',
             buttonStyle
         ).setOrigin(0.5)
         .setInteractive();
