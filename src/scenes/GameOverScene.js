@@ -178,13 +178,23 @@ export class GameOverScene extends Phaser.Scene {
         // Re-enable input for game scene before stopping
         if (gameScene) {
             gameScene.input.keyboard.enabled = true;
-            // Stop any currently playing music
-            this.sound.stopAll();
+            gameScene.physics.resume();
+            
+            // Clear any remaining game objects
+            gameScene.obstacles?.clear(true, true);
+            gameScene.backgrounds?.forEach(bg => bg.layer.destroy());
+            gameScene.player?.destroy();
         }
 
-        // Stop both scenes and return to menu
+        // Stop any currently playing music and sounds
+        this.sound.stopAll();
+
+        // Stop all scenes and restart the menu
         this.scene.stop('GameOverScene');
         this.scene.stop(sceneName);
+        this.scene.stop('CharacterSelectScene'); // Also stop character select scene if it exists
+        
+        // Start fresh menu scene
         this.scene.start('StartMenuScene');
     }
 } 
