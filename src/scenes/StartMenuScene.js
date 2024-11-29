@@ -19,6 +19,13 @@ export class StartMenuScene extends Phaser.Scene {
     }
 
     create() {
+        // Add this at the start of the create method
+        this.scene.manager.scenes.forEach(scene => {
+            if (scene.scene.key !== 'StartMenuScene') {
+                this.scene.stop(scene.scene.key);
+            }
+        });
+        
         // Add menu background
         const background = this.add.image(0, 0, 'menu-background');
         background.setOrigin(0, 0);
