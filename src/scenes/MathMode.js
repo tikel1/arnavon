@@ -224,9 +224,9 @@ export class MathMode extends BaseScene {
             this.timerBar.destroy();
         }
         
-        const baseTime = 5000;
+        const baseTime = 8000;
         const level = this.levelManager.currentLevel;
-        const timeLeft = Math.max(2000, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
+        const timeLeft = Math.max(3000, Math.ceil(baseTime * Math.pow(0.9, level - 1)));
 
         // Create container for timer
         this.timerBar = this.add.container(this.cameras.main.centerX, 95);

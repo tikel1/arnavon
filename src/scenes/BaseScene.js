@@ -131,15 +131,9 @@ export class BaseScene extends Phaser.Scene {
             }
         ).setOrigin(1, 0);
 
-        // Add lives display
-        this.livesText = this.add.text(
-            16, 
-            16, 
-            '❤️'.repeat(this.lives), 
-            {
-                fontSize: '24px'
-            }
-        );
+        // Create a container for hearts instead of text
+        this.livesContainer = this.add.container(16, 35);
+        this.updateLivesDisplay();
 
         // Reset physics state
         this.physics.world.resume();
@@ -160,6 +154,24 @@ export class BaseScene extends Phaser.Scene {
 
         // Add this line with your existing create content
         this.healSound = this.sound.add('heal', { volume: 0.5 });
+
+        // Add this after other input setup (around line 142)
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.returnToMainMenu();
+        });
+    }
+
+    updateLivesDisplay() {
+        // Clear existing hearts
+        this.livesContainer.removeAll(true);
+        
+        // Add new hearts with more spacing and smaller scale
+        for (let i = 0; i < this.lives; i++) {
+            const heart = this.add.image(i * 30, 0, 'heart-powerup')
+                .setScale(0.035)
+                .setOrigin(0, 0.5);
+            this.livesContainer.add(heart);
+        }
     }
 
     update() {
@@ -216,9 +228,7 @@ export class BaseScene extends Phaser.Scene {
         if (!this.player.isDead) {
             this.lives--;
             if (this.lives >= 0) {
-                this.livesText.setText('❤️'.repeat(this.lives));
-            } else {
-                this.livesText.setText('');
+                this.updateLivesDisplay();
             }
 
             if (this.lives <= 0) {
@@ -320,5 +330,29 @@ export class BaseScene extends Phaser.Scene {
         if (this.physics) {
             this.physics.resume();
         }
+    }
+
+    returnToMainMenu() {
+        // Stop the current scene
+        this.isGameOver = true;
+        
+        // Clear game objects
+        this.obstacles?.clear(true, true);
+        this.backgrounds?.forEach(bg => bg.layer.destroy());
+        this.player?.destroy();
+        
+        // Stop all sounds
+        this.sound.stopAll();
+        
+        // Stop physics
+        this.physics.pause();
+        
+        // Stop all active scenes
+        this.scene.stop(this.scene.key);
+        this.scene.stop('GameOverScene');
+        this.scene.stop('CharacterSelectScene');
+        
+        // Start fresh menu scene
+        this.scene.start('StartMenuScene');
     }
 } 

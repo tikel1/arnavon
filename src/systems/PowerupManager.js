@@ -79,7 +79,7 @@ export class PowerupManager {
     handlePowerupCollision(player, powerup) {
         if (this.scene.lives < 3) {
             this.scene.lives++;
-            this.scene.livesText.setText('❤️'.repeat(this.scene.lives));
+            this.scene.updateLivesDisplay();
             
             if (this.scene.healSound && soundManager.isSoundOn) {
                 this.scene.healSound.play();
