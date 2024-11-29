@@ -8,12 +8,15 @@ export class StartMenuScene extends Phaser.Scene {
     }
 
     preload() {
+        // Get the base URL from window location
+        const baseURL = window.location.pathname.includes('arnavon') ? '/arnavon/' : '/';
+        
         if (!this.textures.exists('menu-background')) {
-            this.load.image('menu-background', 'assets/Menu/menu.webp');
+            this.load.image('menu-background', baseURL + 'assets/Menu/menu.webp');
         }
-        this.load.image('sound-on', 'assets/Menu/sound-on.png');
-        this.load.image('sound-off', 'assets/Menu/sound-off.png');
-        this.load.audio('theme', 'assets/Audio/arnavon.mp3');
+        this.load.image('sound-on', baseURL + 'assets/Menu/sound-on.png');
+        this.load.image('sound-off', baseURL + 'assets/Menu/sound-off.png');
+        this.load.audio('theme', baseURL + 'assets/Audio/arnavon.mp3');
     }
 
     create() {

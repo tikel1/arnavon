@@ -1,4 +1,5 @@
 import { POWERUPS, GAME } from '../config/constants';
+import { soundManager } from '../utils/SoundManager';
 
 export class PowerupManager {
     constructor(scene) {
@@ -80,7 +81,7 @@ export class PowerupManager {
             this.scene.lives++;
             this.scene.livesText.setText('❤️'.repeat(this.scene.lives));
             
-            if (this.scene.healSound) {
+            if (this.scene.healSound && soundManager.isSoundOn) {
                 this.scene.healSound.play();
             }
             
