@@ -2,12 +2,16 @@ export class StartMenuScene extends Phaser.Scene {
     constructor() {
         super('StartMenuScene');
         this.selectedButton = 0; // 0 for simple mode, 1 for math mode
+        this.isSoundOn = false;
     }
 
     preload() {
         if (!this.textures.exists('menu-background')) {
             this.load.image('menu-background', 'assets/Menu/menu.webp');
         }
+        this.load.image('sound-on', 'assets/Menu/sound-on.png');
+        this.load.image('sound-off', 'assets/Menu/sound-off.png');
+        this.load.audio('theme', 'assets/Audio/arnavon.mp3');
     }
 
     create() {
@@ -93,6 +97,36 @@ export class StartMenuScene extends Phaser.Scene {
 
         // Initial button styles
         this.updateButtonStyles(buttons);
+
+        // Add sound toggle button
+        this.soundButton = this.add.image(
+            this.cameras.main.width - 50,
+            this.cameras.main.height - 50,
+            this.isSoundOn ? 'sound-on' : 'sound-off'
+        )
+        .setInteractive()
+        .setScale(0.5);
+
+        // Add theme music
+        this.themeMusic = this.sound.add('theme', {
+            loop: true,
+            volume: 0.5
+        });
+
+        // Sound button interactions
+        this.soundButton.on('pointerdown', () => {
+            this.toggleSound();
+        });
+
+        this.soundButton.on('pointerover', () => {
+            this.soundButton.setScale(0.6);
+        });
+
+        this.soundButton.on('pointerout', () => {
+            this.soundButton.setScale(0.5);
+        });
+
+        this.initializeSound();
     }
 
     updateButtonStyles(buttons) {
@@ -114,5 +148,27 @@ export class StartMenuScene extends Phaser.Scene {
         };
         const sceneName = modeMap[mode] === 'simple' ? 'SimpleMode' : 'MathMode';
         this.scene.start('CharacterSelectScene', { mode: sceneName });
+    }
+
+    toggleSound() {
+        this.isSoundOn = !this.isSoundOn;
+        this.soundButton.setTexture(this.isSoundOn ? 'sound-on' : 'sound-off');
+        
+        if (this.isSoundOn) {
+            this.themeMusic.play();
+        } else {
+            this.themeMusic.stop();
+        }
+
+        // Store sound preference in localStorage
+        localStorage.setItem('arnavonSoundEnabled', this.isSoundOn);
+    }
+
+    initializeSound() {
+        // Load sound preference from localStorage, default to false
+        this.isSoundOn = localStorage.getItem('arnavonSoundEnabled') === 'true';
+        if (this.isSoundOn) {
+            this.themeMusic.play();
+        }
     }
 } 
