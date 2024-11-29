@@ -1,6 +1,7 @@
 export class GameOverScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameOverScene', active: false });
+        this.gameOverColor = '#4a90e2'; // Nice blue color, can be configured
     }
 
     init(data) {
@@ -14,7 +15,6 @@ export class GameOverScene extends Phaser.Scene {
         const sceneName = this.gameMode === 'simple' ? 'SimpleMode' : 'MathMode';
         const gameScene = this.scene.get(sceneName);
         
-        // Pause the game scene's physics if it exists
         if (gameScene && gameScene.physics) {
             gameScene.physics.pause();
         }
@@ -28,54 +28,60 @@ export class GameOverScene extends Phaser.Scene {
             0.7
         ).setOrigin(0);
 
-        // Game Over text with animation
+        // Game Over text with animation and subtle movement
         const gameOver = this.add.text(
             this.cameras.main.centerX,
-            100,
+            80,
             'לא נורא',
             {
-                fontSize: '64px',
-                fill: '#ff0000',
+                fontSize: '48px',
+                fill: this.gameOverColor,
                 stroke: '#000',
                 strokeThickness: 6,
                 fontFamily: 'Rubik',
                 fontWeight: '500',
-                rtl: true
+                rtl: true,
+                align: 'center'
             }
         ).setOrigin(0.5);
 
-        // Animate game over text
+        // Add subtle floating animation
         this.tweens.add({
             targets: gameOver,
-            scale: { from: 0, to: 1 },
-            duration: 1000,
-            ease: 'Bounce'
+            y: '+=5',
+            duration: 1500,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
         });
 
-        // Score and level info
+        // Score and level info with center alignment
         const stats = this.add.text(
-            this.cameras.main.centerX,
-            200,
+            0, 0,  // Position relative to container
             [
-                `שלב: ${this.level}`,
-                `תוצאה: ${this.finalScore}`
+                `תוצאה: ${this.finalScore}`,  // Switched order
+                `שלב: ${this.level}`
             ],
             {
-                fontSize: '32px',
+                fontSize: '24px',
                 fill: '#fff',
                 stroke: '#000',
                 strokeThickness: 4,
                 align: 'center',
-                lineSpacing: 20,
+                lineSpacing: 15,
                 fontFamily: 'Rubik',
                 fontWeight: '500',
                 rtl: true
             }
         ).setOrigin(0.5);
 
-        // Create buttons
+        // Create a container for stats at the desired position
+        const statsContainer = this.add.container(this.cameras.main.centerX, 160);
+        statsContainer.add(stats);
+
+        // Create buttons with smaller font
         const buttonStyle = {
-            fontSize: '28px',
+            fontSize: '20px', // Even smaller font
             fill: '#fff',
             stroke: '#000',
             strokeThickness: 4,
@@ -84,26 +90,27 @@ export class GameOverScene extends Phaser.Scene {
             rtl: true
         };
 
+        // Buttons container moved down for more spacing
+        const buttonsContainer = this.add.container(this.cameras.main.centerX, 250);
+
         // Retry button
         const retryButton = this.add.text(
-            this.cameras.main.centerX,
-            300,
-            '!נסו שוב (רווח)',
+            0, 0,
+            'נסו שוב (רווח)',
             buttonStyle
-        ).setOrigin(0.5)
-        .setInteractive();
+        ).setOrigin(0.5);
 
-        // Menu button
+        // Menu button with reduced spacing
         const menuButton = this.add.text(
-            this.cameras.main.centerX,
-            360,
+            0, 35,
             'תפריט ראשי (M)',
             buttonStyle
-        ).setOrigin(0.5)
-        .setInteractive();
+        ).setOrigin(0.5);
 
-        // Add hover effects to buttons
+        buttonsContainer.add([retryButton, menuButton]);
+        
         [retryButton, menuButton].forEach(button => {
+            button.setInteractive();
             button.on('pointerover', () => {
                 button.setScale(1.1);
                 button.setStyle({ fill: '#ffff00' });
@@ -114,10 +121,6 @@ export class GameOverScene extends Phaser.Scene {
                 button.setStyle({ fill: '#fff' });
             });
         });
-
-        // Add click handlers
-        retryButton.on('pointerdown', () => this.retryGame());
-        menuButton.on('pointerdown', () => this.goToMenu());
 
         // Remove any existing keyboard listeners from the game scene
         if (gameScene) {
@@ -142,10 +145,10 @@ export class GameOverScene extends Phaser.Scene {
             mKey.destroy();
         });
 
-        // Add button prompts that pulse
+        // Remove the pulsing animation from the buttons
         this.tweens.add({
             targets: [retryButton, menuButton],
-            scale: 1.05,
+            scale: 1.02,
             duration: 1000,
             yoyo: true,
             repeat: -1
@@ -175,6 +178,8 @@ export class GameOverScene extends Phaser.Scene {
         // Re-enable input for game scene before stopping
         if (gameScene) {
             gameScene.input.keyboard.enabled = true;
+            // Stop any currently playing music
+            this.sound.stopAll();
         }
 
         // Stop both scenes and return to menu

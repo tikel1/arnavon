@@ -91,3 +91,8 @@ canvas {
   color: #333;
   padding: 8px;
 }
+
+.game-text {
+  text-align: center !important;
+  direction: rtl;
+}
