@@ -168,7 +168,7 @@ export class GameOverScene extends Phaser.Scene {
         // Stop both scenes and start a new game
         this.scene.stop('GameOverScene');
         this.scene.stop(sceneName);
-        this.scene.start(sceneName);
+        this.scene.start(sceneName, { mode: this.gameMode });
     }
 
     goToMenu() {
