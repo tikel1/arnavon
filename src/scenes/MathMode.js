@@ -201,11 +201,25 @@ export class MathMode extends BaseScene {
         }
 
         const answerStr = answer.toString();
-        const hiddenAnswer = answerStr.slice(0, -1) + '_';
+        
+        // Determine which digit to hide (20% chance for dozens if available)
+        let hiddenDigitIndex;
+        if (answerStr.length > 1 && Math.random() < 0.2) {
+            // Hide dozens digit
+            hiddenDigitIndex = answerStr.length - 2;
+        } else {
+            // Hide singles digit
+            hiddenDigitIndex = answerStr.length - 1;
+        }
+
+        // Create hidden answer string
+        const hiddenAnswer = answerStr.split('')
+            .map((digit, index) => index === hiddenDigitIndex ? '_' : digit)
+            .join('');
 
         this.currentQuestion = {
             display: `${num1} ${operation} ${num2} = ${hiddenAnswer}`,
-            answer: answerStr[answerStr.length - 1]
+            answer: answerStr[hiddenDigitIndex]
         };
 
         if (this.questionText) {
