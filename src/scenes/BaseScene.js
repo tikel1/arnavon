@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { LevelManager } from '../systems/LevelManager';
 import { PowerupManager } from '../systems/PowerupManager';
+import { soundManager } from '../utils/SoundManager';
 
 export class BaseScene extends Phaser.Scene {
     constructor(sceneName) {
@@ -53,6 +54,10 @@ export class BaseScene extends Phaser.Scene {
         for (let i = 1; i <= 4; i++) {
             this.load.audio(`jump-sound-${i}`, `${this.basePath}/assets/Audio/jump${i}.mp3`);
         }
+
+        // Load hurt and death sounds
+        this.load.audio('hurt-sound', `${this.basePath}/assets/Audio/hurt.mp3`);
+        this.load.audio('die-sound', `${this.basePath}/assets/Audio/die.mp3`);
     }
 
     create() {
@@ -227,7 +232,8 @@ export class BaseScene extends Phaser.Scene {
             this.player.body.allowGravity = false;
             this.player.body.enable = false;
             
-            // Finally play death animation
+            // Play death sound and animation
+            soundManager.playSound(this.player.dieSound);
             this.player.play('death');
             
             // Wait for animation to complete before showing game over

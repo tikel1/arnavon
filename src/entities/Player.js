@@ -12,6 +12,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         for (let i = 1; i <= 4; i++) {
             this.jumpSounds.push(scene.sound.add(`jump-sound-${i}`, { volume: 0.2 }));
         }
+        this.hurtSound = scene.sound.add('hurt-sound', { volume: 0.2 });
+        this.dieSound = scene.sound.add('die-sound', { volume: 0.2 });
         this.init();
     }
 
@@ -109,6 +111,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             if (this.scene.lives <= 0) {
                 this.isDead = true;
                 
+                // Play death sound
+                soundManager.playSound(this.dieSound);
+                
                 // First ensure player is at ground level
                 this.y = this.groundY;
                 this.setVelocityY(0);
@@ -120,7 +125,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
                 // Finally play death animation
                 this.play('death');
             } else {
-                // Just hit but not dead
+                // Just hit but not dead - play hurt sound
+                soundManager.playSound(this.hurtSound);
                 this.setTint(0xff0000);
                 this.scene.time.delayedCall(100, () => {
                     this.clearTint();
