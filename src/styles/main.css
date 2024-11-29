@@ -7,15 +7,9 @@
 
 body {
   margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #f0f2f5;
-  font-family: 'Press Start 2P', cursive;
-  gap: 1rem;
 }
 
 .banner {
@@ -63,20 +57,37 @@ body {
 }
 
 #game {
-  width: 576px;
-  height: 324px;
-  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 canvas {
   border-radius: 8px;
 }
 
+.logo-container {
+  margin: 20px 0;
+}
+
 .game-logo {
-    display: block;
-    margin-top: -10rem;
-    width: 25vw;
-    height: auto;
-    max-width: 800px;
-    min-width: 200px;
+  max-width: 300px;
+  height: auto;
+}
+
+#game-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.credit-text {
+  margin-top: 15px;
+  text-align: center;
+  direction: rtl;
+  font-family: Rubik, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  padding: 8px;
 }

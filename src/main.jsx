@@ -9,6 +9,7 @@ const config = {
     type: Phaser.AUTO,
     width: 576,
     height: 324,
+    parent: 'game',
     physics: {
         default: 'arcade',
         arcade: {
@@ -19,4 +20,9 @@ const config = {
     scene: [StartMenuScene, CharacterSelectScene, SimpleMode, MathMode, GameOverScene]
 };
 
-new Phaser.Game(config); 
+new Phaser.Game(config);
+
+const creditText = document.createElement('div');
+creditText.className = 'credit-text';
+creditText.innerHTML = 'המשחק תוכנן על-ידי ליבי קפלן מכיתה ב׳ 1 בבית הספר כצנלסון';
+document.body.appendChild(creditText); 

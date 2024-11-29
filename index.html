@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl">
   <head>
     <title>Arnavon Game</title>
+    <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./src/styles/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./src/styles/main.css">
   </head>
   <body>
-    <img src="./assets/Menu/logo.webp" alt="Arnavon and his friends" class="game-logo">
+    <div class="logo-container">
+      <img src="./assets/Menu/logo.webp" alt="Arnavon Logo" class="game-logo">
+    </div>
+    <div id="game"></div>
     <script type="module" src="./src/main.jsx"></script>
   </body>
 </html> 
