@@ -97,9 +97,16 @@ export class BaseScene extends Phaser.Scene {
             {
                 fontSize: '24px',
                 fill: '#fff',
-                stroke: '#000',
-                strokeThickness: 4,
-                rtl: true
+                fontFamily: 'Handjet',
+                fontWeight: '900',
+                rtl: true,
+                shadow: {
+                    offsetX: 2,
+                    offsetY: 2,
+                    color: '#000',
+                    blur: 0,
+                    fill: true
+                }
             }
         ).setOrigin(1, 0);
 
@@ -111,9 +118,16 @@ export class BaseScene extends Phaser.Scene {
             {
                 fontSize: '24px',
                 fill: '#fff',
-                stroke: '#000',
-                strokeThickness: 4,
-                rtl: true
+                fontFamily: 'Handjet',
+                fontWeight: '900',
+                rtl: true,
+                shadow: {
+                    offsetX: 2,
+                    offsetY: 2,
+                    color: '#000',
+                    blur: 0,
+                    fill: true
+                }
             }
         ).setOrigin(1, 0);
 

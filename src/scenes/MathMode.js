@@ -47,17 +47,75 @@ export class MathMode extends BaseScene {
         this.player.setDepth(1);
         this.setupCollisions();
         
-        // Create question text (initially empty)
+        const panelWidth = 240;
+        const panelHeight = 60;
+        const cornerRadius = 12;
+
+        // Base panel (dark blue)
+        const basePanel = this.add.graphics();
+        basePanel.setDepth(9);
+        basePanel.fillStyle(0x0A2A4A);
+        
+        // Draw base panel
+        basePanel.beginPath();
+        basePanel.moveTo(this.cameras.main.centerX - panelWidth/2 + cornerRadius, this.cameras.main.centerY - 250);
+        // Top edge
+        basePanel.lineTo(this.cameras.main.centerX + panelWidth/2 - cornerRadius, this.cameras.main.centerY - 250);
+        // Top right corner (stepped)
+        for (let i = 0; i < cornerRadius; i += 3) {
+            basePanel.lineTo(
+                this.cameras.main.centerX + panelWidth/2 - cornerRadius + i,
+                this.cameras.main.centerY - 250 + i/2
+            );
+        }
+        // Right edge
+        basePanel.lineTo(this.cameras.main.centerX + panelWidth/2, this.cameras.main.centerY - 250 + panelHeight - cornerRadius);
+        // Bottom right corner (stepped)
+        for (let i = 0; i < cornerRadius; i += 3) {
+            basePanel.lineTo(
+                this.cameras.main.centerX + panelWidth/2 - i,
+                this.cameras.main.centerY - 250 + panelHeight - cornerRadius + i
+            );
+        }
+        // Bottom edge
+        basePanel.lineTo(this.cameras.main.centerX - panelWidth/2 + cornerRadius, this.cameras.main.centerY - 250 + panelHeight);
+        // Bottom left corner (stepped)
+        for (let i = 0; i < cornerRadius; i += 3) {
+            basePanel.lineTo(
+                this.cameras.main.centerX - panelWidth/2 + cornerRadius - i,
+                this.cameras.main.centerY - 250 + panelHeight - i
+            );
+        }
+        // Left edge
+        basePanel.lineTo(this.cameras.main.centerX - panelWidth/2, this.cameras.main.centerY - 250 + cornerRadius);
+        // Top left corner (stepped)
+        for (let i = 0; i < cornerRadius; i += 3) {
+            basePanel.lineTo(
+                this.cameras.main.centerX - panelWidth/2 + i,
+                this.cameras.main.centerY - 250 + cornerRadius - i
+            );
+        }
+        basePanel.closePath();
+        basePanel.fill();
+        
+        // Create question text with maximum font weight
         this.questionText = this.add.text(
             this.cameras.main.centerX,
-            50,
+            55,
             '',
             {
-                fontSize: '32px',
-                fill: '#fff',
-                stroke: '#000',
-                strokeThickness: 4,
-                align: 'center'
+                fontSize: '48px',
+                fontFamily: 'Handjet',
+                fontWeight: '900',
+                color: '#FFD700',
+                align: 'center',
+                shadow: {
+                    offsetX: 2,
+                    offsetY: 2,
+                    color: '#000',
+                    blur: 0,
+                    fill: true
+                }
             }
         ).setOrigin(0.5).setDepth(10);
 
@@ -162,59 +220,51 @@ export class MathMode extends BaseScene {
             this.timerEvent.destroy();
         }
         
-        // Remove old timer bar if it exists
         if (this.timerBar) {
             this.timerBar.destroy();
         }
         
-        const baseTime = 5000; // Time in milliseconds
+        const baseTime = 5000;
         const level = this.levelManager.currentLevel;
         const timeLeft = Math.max(2000, Math.ceil(baseTime * Math.pow(0.8, level - 1)));
+
+        // Create container for timer
+        this.timerBar = this.add.container(this.cameras.main.centerX, 95);
         
-        // Create background bar (gray)
-        const barBackground = this.add.rectangle(
-            this.cameras.main.centerX,
-            80,
-            200,
-            20,
-            0x666666
-        ).setOrigin(0.5);
+        // Dimensions
+        const width = 150;
+        const height = 12;
         
-        // Create timer bar (green)
-        this.timerBar = this.add.rectangle(
-            this.cameras.main.centerX - 100,
-            80,
-            200,
-            20,
-            0x00ff00
+        // Create black background
+        const background = this.add.rectangle(0, 0, width, height, 0x000000)
+            .setStrokeStyle(1, 0xFFFFFF);  // White border
+        this.timerBar.add(background);
+
+        // Create main progress bar (slightly smaller than background)
+        const mainBar = this.add.rectangle(
+            -(width/2 - 2),
+            0,
+            width - 4,
+            height - 4,
+            0x92C81A
         ).setOrigin(0, 0.5);
-        
+        this.timerBar.add(mainBar);
+
         // Create the timer event
-        this.timerEvent = this.time.addEvent({
-            delay: timeLeft,
-            callback: () => {
-                if (!this.isGameOver) {
-                    this.spawnObstacles();
-                }
-                this.timerBar.destroy();
-                barBackground.destroy();
+        this.timerEvent = this.time.delayedCall(timeLeft, () => {
+            if (!this.isGameOver) {
+                this.spawnObstacles();
             }
+            this.timerBar.destroy();
         });
-        
-        // Update the timer bar width
+
+        // Update the timer width
         this.time.addEvent({
-            delay: 16, // 60fps
+            delay: 32,
             callback: () => {
                 if (this.timerBar && this.timerBar.active) {
-                    const progress = this.timerEvent.getProgress();
-                    this.timerBar.width = 200 * (1 - progress);
-                    
-                    // Change color based on remaining time
-                    if (progress > 0.7) {
-                        this.timerBar.setFillStyle(0xff0000); // Red
-                    } else if (progress > 0.3) {
-                        this.timerBar.setFillStyle(0xffff00); // Yellow
-                    }
+                    const progress = 1 - this.timerEvent.getProgress();
+                    mainBar.width = Math.round((width - 4) * progress);
                 }
             },
             loop: true
