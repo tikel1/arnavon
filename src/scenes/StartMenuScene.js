@@ -1,3 +1,5 @@
+import { soundManager } from '../utils/SoundManager';
+
 export class StartMenuScene extends Phaser.Scene {
     constructor() {
         super('StartMenuScene');
@@ -126,6 +128,7 @@ export class StartMenuScene extends Phaser.Scene {
             this.soundButton.setScale(0.5);
         });
 
+        // Initialize sound last
         this.initializeSound();
     }
 
@@ -151,24 +154,13 @@ export class StartMenuScene extends Phaser.Scene {
     }
 
     toggleSound() {
-        this.isSoundOn = !this.isSoundOn;
+        this.isSoundOn = soundManager.toggleSound();
         this.soundButton.setTexture(this.isSoundOn ? 'sound-on' : 'sound-off');
-        
-        if (this.isSoundOn) {
-            this.themeMusic.play();
-        } else {
-            this.themeMusic.stop();
-        }
-
-        // Store sound preference in localStorage
-        localStorage.setItem('arnavonSoundEnabled', this.isSoundOn);
     }
 
     initializeSound() {
-        // Load sound preference from localStorage, default to false
-        this.isSoundOn = localStorage.getItem('arnavonSoundEnabled') === 'true';
-        if (this.isSoundOn) {
-            this.themeMusic.play();
-        }
+        this.isSoundOn = soundManager.isSoundOn;
+        this.soundButton.setTexture(this.isSoundOn ? 'sound-on' : 'sound-off');
+        soundManager.playMusic(this.themeMusic);
     }
 } 

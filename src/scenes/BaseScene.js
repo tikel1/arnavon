@@ -48,6 +48,11 @@ export class BaseScene extends Phaser.Scene {
                 frameHeight: 24 
             }
         );
+
+        // Load all jump sounds
+        for (let i = 1; i <= 4; i++) {
+            this.load.audio(`jump-sound-${i}`, `${this.basePath}/assets/Audio/jump${i}.mp3`);
+        }
     }
 
     create() {

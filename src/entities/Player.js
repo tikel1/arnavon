@@ -1,3 +1,5 @@
+import { soundManager } from '../utils/SoundManager';
+
 export class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, jumpKey = Phaser.Input.Keyboard.KeyCodes.SPACE) {
         super(scene, x, y, 'player-run');
@@ -6,6 +8,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         this.jumpForce = -450;
         this.baseAnimationSpeed = 12;
         this.jumpKey = jumpKey;
+        this.jumpSounds = [];
+        for (let i = 1; i <= 4; i++) {
+            this.jumpSounds.push(scene.sound.add(`jump-sound-${i}`, { volume: 0.2 }));
+        }
         this.init();
     }
 
@@ -87,10 +93,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     jump() {
-        if (!this.isJumping && !this.isDead) {
+        if (!this.isJumping && this.y >= this.groundY) {
             this.isJumping = true;
             this.setVelocityY(this.jumpForce);
             this.play('jump', true);
+            
+            // Play random jump sound
+            const randomSound = this.jumpSounds[Math.floor(Math.random() * this.jumpSounds.length)];
+            soundManager.playSound(randomSound);
         }
     }
 
