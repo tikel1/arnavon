@@ -12,8 +12,12 @@ export class PowerupManager {
     }
 
     getNextSpawnTime() {
-        const randomDelay = Phaser.Math.Between(30000, 90000);
-        return this.scene.time.now + randomDelay;
+        const baseDelay = Phaser.Math.Between(15000, 45000);
+        
+        const level = this.scene.levelManager.currentLevel;
+        const scaledDelay = baseDelay * Math.pow(0.9, level - 1);
+        
+        return this.scene.time.now + scaledDelay;
     }
 
     update() {
@@ -75,6 +79,10 @@ export class PowerupManager {
         if (this.scene.lives < 3) {
             this.scene.lives++;
             this.scene.livesText.setText('❤️'.repeat(this.scene.lives));
+            
+            if (this.scene.healSound) {
+                this.scene.healSound.play();
+            }
             
             const plusOne = this.scene.add.text(
                 player.x,

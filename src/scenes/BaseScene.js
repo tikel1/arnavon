@@ -58,6 +58,9 @@ export class BaseScene extends Phaser.Scene {
         // Load hurt and death sounds
         this.load.audio('hurt-sound', `${this.basePath}/assets/Audio/hurt.mp3`);
         this.load.audio('die-sound', `${this.basePath}/assets/Audio/die.mp3`);
+
+        // Add this line with your existing preload content
+        this.load.audio('heal', 'assets/Audio/heal.mp3');
     }
 
     create() {
@@ -140,6 +143,9 @@ export class BaseScene extends Phaser.Scene {
                 this.powerupManager
             );
         }
+
+        // Add this line with your existing create content
+        this.healSound = this.sound.add('heal', { volume: 0.5 });
     }
 
     update() {
