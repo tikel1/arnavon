@@ -71,3 +71,12 @@ body {
 canvas {
   border-radius: 8px;
 }
+
+.game-logo {
+    display: block;
+    margin-top: -10rem;
+    width: 25vw;
+    height: auto;
+    max-width: 800px;
+    min-width: 200px;
+}

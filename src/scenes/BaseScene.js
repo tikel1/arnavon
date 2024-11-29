@@ -80,12 +80,13 @@ export class BaseScene extends Phaser.Scene {
         this.scoreText = this.add.text(
             this.cameras.main.width - 16, 
             16, 
-            'Score: 0', 
+            'תוצאה: 0', 
             {
                 fontSize: '24px',
                 fill: '#fff',
                 stroke: '#000',
-                strokeThickness: 4
+                strokeThickness: 4,
+                rtl: true
             }
         ).setOrigin(1, 0);
 
@@ -93,12 +94,13 @@ export class BaseScene extends Phaser.Scene {
         this.levelText = this.add.text(
             this.cameras.main.width - 16, 
             48, 
-            'Level: 1', 
+            'שלב: 1', 
             {
                 fontSize: '24px',
                 fill: '#fff',
                 stroke: '#000',
-                strokeThickness: 4
+                strokeThickness: 4,
+                rtl: true
             }
         ).setOrigin(1, 0);
 
@@ -177,7 +179,7 @@ export class BaseScene extends Phaser.Scene {
 
     incrementScore() {
         this.score += 1;
-        this.scoreText.setText('Score: ' + this.score);
+        this.scoreText.setText('תוצאה: ' + this.score);
     }
 
     handleCollision() {
@@ -270,6 +272,7 @@ export class BaseScene extends Phaser.Scene {
         this.levelManager.currentSeries++;
         if (this.levelManager.currentSeries >= this.levelManager.seriesInLevel) {
             this.levelManager.completeLevel();
+            this.levelText.setText('שלב: ' + (this.levelManager.currentLevel));
             this.time.delayedCall(1000, () => this.spawnSeries());
         } else {
             this.levelManager.isSpawningSeries = false;

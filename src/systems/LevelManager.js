@@ -43,7 +43,7 @@ export class LevelManager {
         this.updateBackgroundSpeeds();
 
         if (this.scene.levelText) {
-            this.scene.levelText.setText('Level: ' + this.currentLevel);
+            this.scene.levelText.setText('שלב: ' + this.currentLevel);
         }
 
         console.log(`Level ${this.currentLevel} starting with ${this.seriesInLevel} series`);
