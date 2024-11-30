@@ -24,16 +24,16 @@ export class BaseScene extends Phaser.Scene {
         const folderNumber = characterPath === 'Pink_Monster' ? '1' : 
                             characterPath === 'Owlet_Monster' ? '2' : '3';
 
-        // Load player sprites
-        this.load.spritesheet('player-run', 
+        // Load player sprites with character-specific keys
+        this.load.spritesheet(`${characterPath}-run`, 
             `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Run_6.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
-        this.load.spritesheet('player-jump', 
+        this.load.spritesheet(`${characterPath}-jump`, 
             `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Jump_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
-        this.load.spritesheet('player-death', 
+        this.load.spritesheet(`${characterPath}-death`, 
             `${this.basePath}/assets/${folderNumber} ${characterPath}/${characterPath}_Death_8.png`,
             { frameWidth: 32, frameHeight: 32 }
         );
@@ -346,6 +346,11 @@ export class BaseScene extends Phaser.Scene {
         
         // Stop physics
         this.physics.pause();
+        
+        // Clear animation cache
+        this.anims.remove('run');
+        this.anims.remove('jump');
+        this.anims.remove('death');
         
         // Stop all active scenes
         this.scene.stop(this.scene.key);

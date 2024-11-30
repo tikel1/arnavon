@@ -2,7 +2,8 @@ import { soundManager } from '../utils/SoundManager';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, jumpKey = Phaser.Input.Keyboard.KeyCodes.SPACE) {
-        super(scene, x, y, 'player-run');
+        const characterPath = scene.selectedCharacter || 'Pink_Monster';
+        super(scene, x, y, `${characterPath}-run`);
         this.scene = scene;
         this.groundY = 260;
         this.jumpForce = -450;
@@ -52,11 +53,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     setupAnimations() {
+        const characterPath = this.scene.selectedCharacter || 'Pink_Monster';
+        
         // Running animation
         if (!this.scene.anims.exists('run')) {
             this.scene.anims.create({
                 key: 'run',
-                frames: this.scene.anims.generateFrameNumbers('player-run', { 
+                frames: this.scene.anims.generateFrameNumbers(`${characterPath}-run`, { 
                     start: 0, 
                     end: 5 
                 }),
@@ -69,7 +72,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.scene.anims.exists('jump')) {
             this.scene.anims.create({
                 key: 'jump',
-                frames: this.scene.anims.generateFrameNumbers('player-jump', { 
+                frames: this.scene.anims.generateFrameNumbers(`${characterPath}-jump`, { 
                     start: 0, 
                     end: 7 
                 }),
@@ -82,7 +85,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (!this.scene.anims.exists('death')) {
             this.scene.anims.create({
                 key: 'death',
-                frames: this.scene.anims.generateFrameNumbers('player-death', {
+                frames: this.scene.anims.generateFrameNumbers(`${characterPath}-death`, {
                     start: 0,
                     end: 7
                 }),
