@@ -15,8 +15,8 @@ export class LevelManager {
             powerup: 0.9,
             background: {
                 layer1: 0.3,
-                layer2: 0.45,
-                layer3: 0.6,
+                layer2: 0.7,
+                layer3: 0.75,
                 layer4: 0.82
             }
         };

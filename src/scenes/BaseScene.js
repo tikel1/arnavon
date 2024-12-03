@@ -17,7 +17,7 @@ export class BaseScene extends Phaser.Scene {
     preload() {
         // Load backgrounds with correct path
         for (let i = 1; i <= 4; i++) {
-            this.load.image(`background-${i}`, `${this.basePath}/assets/Background/nature_5/${i}.png`);
+            this.load.image(`background-${i}`, `${this.basePath}/assets/Background/school/${i}.png`);
         }
 
         const characterPath = this.selectedCharacter || 'Pink_Monster';

@@ -22,6 +22,7 @@ jobs:
       - name: Setup public directory
         run: |
           mkdir -p public/assets/Background/nature_5
+          mkdir -p public/assets/Background/school
           mkdir -p public/assets/1\ Pink_Monster
           mkdir -p public/assets/2\ Owlet_Monster
           mkdir -p public/assets/3\ Dude_Monster
@@ -30,6 +31,7 @@ jobs:
           mkdir -p public/assets/Obstacles
           mkdir -p public/assets/Audio
           cp -r assets/Background/nature_5/* public/assets/Background/nature_5/
+          cp -r assets/Background/school/* public/assets/Background/school/
           cp -r assets/1\ Pink_Monster/* public/assets/1\ Pink_Monster/
           cp -r assets/2\ Owlet_Monster/* public/assets/2\ Owlet_Monster/
           cp -r assets/3\ Dude_Monster/* public/assets/3\ Dude_Monster/
