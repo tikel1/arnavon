@@ -12,7 +12,7 @@ export class LevelManager {
         this.BASE_MOVEMENT_SPEED = 250;
         this.speedMultipliers = {
             obstacle: 1,
-            powerup: 0.9,
+            powerup: 0.97,
             background: {
                 layer1: 0.3,
                 layer2: 0.8,
