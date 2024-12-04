@@ -15,9 +15,9 @@ export class LevelManager {
             powerup: 0.9,
             background: {
                 layer1: 0.3,
-                layer2: 0.7,
-                layer3: 0.75,
-                layer4: 0.82
+                layer2: 0.8,
+                layer3: 0.85,
+                layer4: 1
             }
         };
         this.currentSpeed = this.BASE_MOVEMENT_SPEED;
